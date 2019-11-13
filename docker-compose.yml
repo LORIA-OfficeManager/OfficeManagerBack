@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+    db:
+      image: mysql
+      environment:
+                - MYSQL_DATABASE=officemanager
+                - MYSQL_USER=officemanager
+                - MYSQL_PASSWORD=officemanager
+                - MYSQL_ROOT_PASSWORD=officemanager
+                - MYSQL_ROOT_HOST=%
+      volumes:
+            - ./db_officeManager:/var/lib/mysql
+      ports:
+            - "3309:3306"
+    phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: houseskipper
+            MYSQL_PASSWORD: houseskipper
+            MYSQL_ROOT_PASSWORD: houseskipper
+     ports:
+            - "80:80"
+     links:
+            # for mysql container
+            - "db:db"
+volumes:
+    db:
+        driver: "local"
