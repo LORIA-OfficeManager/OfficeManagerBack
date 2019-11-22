@@ -21,9 +21,9 @@ services:
      image: phpmyadmin/phpmyadmin
      environment:
             PMA_ARBITRARY: 1
-            MYSQL_USER: houseskipper
-            MYSQL_PASSWORD: houseskipper
-            MYSQL_ROOT_PASSWORD: houseskipper
+            MYSQL_USER: officemanager
+            MYSQL_PASSWORD: officemanager
+            MYSQL_ROOT_PASSWORD: officemanager
      ports:
             - "80:80"
      links:
