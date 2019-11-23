@@ -1,34 +1,45 @@
 version: '2'
 
 services:
-    sonar:
-       image: sonarqube
-       ports:
-            - 9000:9000
-    db:
-      image: mysql
-      environment:
-                - MYSQL_DATABASE=officemanager
-                - MYSQL_USER=officemanager
-                - MYSQL_PASSWORD=officemanager
-                - MYSQL_ROOT_PASSWORD=officemanager
-                - MYSQL_ROOT_HOST=%
-      volumes:
-            - ./db_officeManager:/var/lib/mysql
-      ports:
-            - "3309:3306"
-    phpmyadmin:
-     image: phpmyadmin/phpmyadmin
-     environment:
-            PMA_ARBITRARY: 1
-            MYSQL_USER: officemanager
-            MYSQL_PASSWORD: officemanager
-            MYSQL_ROOT_PASSWORD: officemanager
-     ports:
-            - "80:80"
-     links:
-            # for mysql container
-            - "db:db"
-volumes:
-    db:
-        driver: "local"
+  sonar:
+   image: sonarqube
+   ports:
+        - 9000:9000
+  db:
+    image: mysql:8.0.2
+    environment:
+      - MYSQL_DATABASE=officemanager   
+      - MYSQL_USER=officemanager
+      - MYSQL_PASSWORD=officemanager
+      - MYSQL_ROOT_PASSWORD=officemanager
+      - MYSQL_ROOT_HOST=%
+    volumes:
+      - ./db_officeManager:/var/lib/mysql
+    ports:
+      - "3306:3306"
+      - "33060"
+    networks:
+      - db_net
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      MYSQL_USER: officemanager
+      MYSQL_PASSWORD: officemanager
+      MYSQL_ROOT_PASSWORD: officemanager
+      #PMA_HOST: db
+      #PMA_PORT: 3309
+    ports:
+      - "8808:80"
+    networks:
+      - db_net
+     #links:
+     #       # for mysql container
+     #       - "db:db"
+volumes: 
+  db:
+    driver: "local"
+networks:
+  db_net:
