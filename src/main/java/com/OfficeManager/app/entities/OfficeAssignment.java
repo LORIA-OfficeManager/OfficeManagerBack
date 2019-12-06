@@ -1,18 +1,26 @@
-package com.OfficeManager.entities;
+package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "OFFICE_ASSIGNMENT")
 @AssociationOverrides({
-        @AssociationOverride(name = "pk.person", joinColumns = @JoinColumn(name = "PERSON_ID")),
-        @AssociationOverride(name = "pk.office", joinColumns = @JoinColumn(name = "OFFICE_ID"))
+        @AssociationOverride(name = "person", joinColumns = @JoinColumn(name = "PERSON_ID")),
+        @AssociationOverride(name = "office", joinColumns = @JoinColumn(name = "OFFICE_ID"))
 })
-public class OfficeAssignment {
+public class OfficeAssignment implements Serializable {
 
     private Integer id;
     private LocalDate startDate, endDate;
+
+    private Person person;
+    private Office office;
+
+    public OfficeAssignment(){
+
+    }
 
     public OfficeAssignment(LocalDate startDate, LocalDate endDate) {
         super();
@@ -47,5 +55,23 @@ public class OfficeAssignment {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    @ManyToOne
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    @ManyToOne
+    public Office getOffice() {
+        return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
     }
 }

@@ -1,22 +1,25 @@
-package com.OfficeManager.entities;
+package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TEAM")
-public class Team {
+@Table(name = "DEPARTMENT")
+public class Department {
 
     private Integer id;
     private String name;
 
-    public Team(String name) {
+    public Department(){
+    }
+
+    public Department(String name) {
         super();
         this.name = name;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TEAM_ID")
+    @Column(name = "DEPARTMENT_ID")
     public Integer getId() {
         return id;
     }

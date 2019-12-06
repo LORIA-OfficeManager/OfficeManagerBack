@@ -1,28 +1,43 @@
-package com.OfficeManager.entities;
+package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "DEPARTMENT")
-public class Department {
+@Table(name = "STATUS")
+public class Status {
 
     private Integer id;
+    private Double size;
     private String name;
 
-    public Department(String name) {
+    public Status(){
+
+    }
+
+    public Status(Double size, String name) {
         super();
+        this.size = size;
         this.name = name;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "DEPARTMENT_ID")
+    @Column(name = "STATUS_ID")
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Column(name = "SIZE", nullable = false)
+    public Double getSize() {
+        return size;
+    }
+
+    public void setSize(Double size) {
+        this.size = size;
     }
 
     @Column(name = "NAME", nullable = false)
