@@ -49,7 +49,7 @@ public class OfficeRestController {
         };
 
         if (!CollectionUtils.isEmpty(offices)) {
-            return offices.stream().map(mapperFunction).sorted().collect(Collectors.toList());
+            return offices.stream().map(mapperFunction).collect(Collectors.toList());
         }
         return null;
     }
