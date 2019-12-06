@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,7 +21,7 @@ public class App
     private static final int nbJoursBetween1900_1970 = 25569;
 
     public static void main( String[] args ) throws IOException, InvalidFormatException {
-        lire("nouveauFichier.xlsx");
+        lire("ListeAffectation.xlsx");
     }
 
     static Date convertExcelToDate(double date){
