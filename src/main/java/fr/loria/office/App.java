@@ -12,6 +12,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.swing.*;
+
 /**
  * Hello world!
  *
@@ -21,7 +23,7 @@ public class App
     private static final int nbJoursBetween1900_1970 = 25569;
 
     public static void main( String[] args ) throws IOException, InvalidFormatException {
-        lire("ListeAffectation.xlsx");
+        lire();
     }
 
     static Date convertExcelToDate(double date){
@@ -62,34 +64,44 @@ public class App
         }
     }
 
-    static void lire(String filename) throws IOException {
-        FileInputStream fichier = new FileInputStream(new File(filename));
-        //créer une instance workbook qui fait référence au fichier xlsx
-        XSSFWorkbook wb = new XSSFWorkbook(fichier);
-        XSSFSheet sheet = wb.getSheetAt(0);
+    static void lire() throws IOException {
+        File repertoireCourant = new File(".").getCanonicalFile();
+        JFileChooser dialogue = new JFileChooser(repertoireCourant);
+        switch (dialogue.showOpenDialog(null)){
+            case JFileChooser.CANCEL_OPTION:
 
-        FormulaEvaluator formulaEvaluator =
-                wb.getCreationHelper().createFormulaEvaluator();
+                break;
+            case JFileChooser.APPROVE_OPTION:
+                FileInputStream fichier = new FileInputStream(new File(String.valueOf(dialogue.getSelectedFile())));
+                //créer une instance workbook qui fait référence au fichier xlsx
+                XSSFWorkbook wb = new XSSFWorkbook(fichier);
+                XSSFSheet sheet = wb.getSheetAt(0);
 
-        for (Row ligne : sheet) {//parcourir les lignes
-            for (Cell cell : ligne) {//parcourir les colonnes
-                //évaluer le type de la cellule
-                switch (formulaEvaluator.evaluateInCell(cell).getCellType())
-                {
-                    case NUMERIC:
-                        System.out.print(convertExcelToDate(cell.getNumericCellValue()).toString() + "\t\t");
-                        break;
-                    case STRING:
-                        System.out.print(cell.getStringCellValue() + "\t");
-                        break;
-                    case BOOLEAN:
-                        System.out.print(cell.getBooleanCellValue() + "\t");
-                        break;
-                    default:
-                        break;
+                FormulaEvaluator formulaEvaluator =
+                        wb.getCreationHelper().createFormulaEvaluator();
+
+                for (Row ligne : sheet) {//parcourir les lignes
+                    for (Cell cell : ligne) {//parcourir les colonnes
+                        //évaluer le type de la cellule
+                        switch (formulaEvaluator.evaluateInCell(cell).getCellType())
+                        {
+                            case NUMERIC:
+                                System.out.print(convertExcelToDate(cell.getNumericCellValue()).toString() + "\t\t");
+                                break;
+                            case STRING:
+                                System.out.print(cell.getStringCellValue() + "\t");
+                                break;
+                            case BOOLEAN:
+                                System.out.print(cell.getBooleanCellValue() + "\t");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    System.out.println();
                 }
-            }
-            System.out.println();
+
+                break;
         }
     }
 }
