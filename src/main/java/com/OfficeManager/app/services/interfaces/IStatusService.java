@@ -1,6 +1,6 @@
-package com.OfficeManager.services.interfaces;
+package com.OfficeManager.app.services.interfaces;
 
-import com.OfficeManager.entities.Status;
+import com.OfficeManager.app.entities.Status;
 
 import java.util.List;
 

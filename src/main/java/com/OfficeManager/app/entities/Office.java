@@ -1,4 +1,4 @@
-package com.OfficeManager.entities;
+package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -79,7 +79,7 @@ public class Office {
         this.description = description;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.person", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "office", cascade = CascadeType.ALL)
     public Set<OfficeAssignment> getAssignments() {
         return assignments;
     }

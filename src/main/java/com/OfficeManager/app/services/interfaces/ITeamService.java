@@ -1,6 +1,6 @@
-package com.OfficeManager.services.interfaces;
+package com.OfficeManager.app.services.interfaces;
 
-import com.OfficeManager.entities.Team;
+import com.OfficeManager.app.entities.Team;
 
 import java.util.List;
 

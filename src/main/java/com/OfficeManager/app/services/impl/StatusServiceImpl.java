@@ -1,8 +1,8 @@
-package com.OfficeManager.services.impl;
+package com.OfficeManager.app.services.impl;
 
-import com.OfficeManager.daos.IStatusDao;
-import com.OfficeManager.entities.Status;
-import com.OfficeManager.services.interfaces.IStatusService;
+import com.OfficeManager.app.daos.IStatusDao;
+import com.OfficeManager.app.entities.Status;
+import com.OfficeManager.app.services.interfaces.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,6 @@ public class StatusServiceImpl implements IStatusService {
 
     @Override
     public List<Status> fetchAll() {
-        return statusDao.fetchAll();
+        return statusDao.findAll();
     }
 }

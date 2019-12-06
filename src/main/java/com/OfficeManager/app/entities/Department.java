@@ -1,4 +1,4 @@
-package com.OfficeManager.entities;
+package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
 

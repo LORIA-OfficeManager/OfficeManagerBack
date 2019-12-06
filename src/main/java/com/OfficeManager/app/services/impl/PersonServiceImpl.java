@@ -1,8 +1,8 @@
-package com.OfficeManager.services.impl;
+package com.OfficeManager.app.services.impl;
 
-import com.OfficeManager.daos.IPersonDao;
-import com.OfficeManager.entities.Person;
-import com.OfficeManager.services.interfaces.IPersonService;
+import com.OfficeManager.app.daos.IPersonDao;
+import com.OfficeManager.app.entities.Person;
+import com.OfficeManager.app.services.interfaces.IPersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,6 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public List<Person> fetchAll() {
-        return personDao.fetchAll();
+        return personDao.findAll();
     }
 }

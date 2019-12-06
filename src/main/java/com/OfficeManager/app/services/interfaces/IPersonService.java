@@ -1,6 +1,6 @@
-package com.OfficeManager.services.interfaces;
+package com.OfficeManager.app.services.interfaces;
 
-import com.OfficeManager.entities.Person;
+import com.OfficeManager.app.entities.Person;
 
 import java.util.List;
 

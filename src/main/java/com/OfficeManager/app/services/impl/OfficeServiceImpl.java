@@ -1,8 +1,8 @@
-package com.OfficeManager.services.impl;
+package com.OfficeManager.app.services.impl;
 
-import com.OfficeManager.daos.IOfficeDao;
-import com.OfficeManager.entities.Office;
-import com.OfficeManager.services.interfaces.IOfficeService;
+import com.OfficeManager.app.daos.IOfficeDao;
+import com.OfficeManager.app.entities.Office;
+import com.OfficeManager.app.services.interfaces.IOfficeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +18,18 @@ public class OfficeServiceImpl implements IOfficeService {
 
     @Override
     public List<Office> fetchAll() {
-        return officeDao.fetchAll();
+        return officeDao.findAll();
     }
 
-    @Override
-    public Office findById(Integer id) {
-        return officeDao.findByOfficeId(id);
-    }
+//    @Override
+//    public Office findById(Integer id) {
+//        return officeDao.findById(id);
+//    }
 
-    @Override
-    public Office findByFullName(Integer num, Integer floor, String building) {
-        return findByFullName(num,floor,building);
-    }
+//    @Override
+//    public Office findByFullName(Integer num, Integer floor, String building) {
+//        return findByFullName(num,floor,building);
+//    }
 
     @Override
     public Office saveOffice(Integer num, Integer floor, String building, Double size) {

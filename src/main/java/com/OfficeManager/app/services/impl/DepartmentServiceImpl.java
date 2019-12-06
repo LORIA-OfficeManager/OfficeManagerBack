@@ -1,8 +1,8 @@
-package com.OfficeManager.services.impl;
+package com.OfficeManager.app.services.impl;
 
-import com.OfficeManager.daos.IDepartmentDao;
-import com.OfficeManager.entities.Department;
-import com.OfficeManager.services.interfaces.IDepartmentService;
+import com.OfficeManager.app.daos.IDepartmentDao;
+import com.OfficeManager.app.entities.Department;
+import com.OfficeManager.app.services.interfaces.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +18,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public List<Department> fetchAll() {
-        return departmentDao.fetchAll();
+        return departmentDao.findAll();
     }
 }

@@ -1,8 +1,8 @@
-package com.OfficeManager.services.impl;
+package com.OfficeManager.app.services.impl;
 
-import com.OfficeManager.daos.IOfficeAssignmentDao;
-import com.OfficeManager.entities.OfficeAssignment;
-import com.OfficeManager.services.interfaces.IOfficeAssignmentService;
+import com.OfficeManager.app.daos.IOfficeAssignmentDao;
+import com.OfficeManager.app.entities.OfficeAssignment;
+import com.OfficeManager.app.services.interfaces.IOfficeAssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +18,6 @@ public class OfficeAssignmentImpl implements IOfficeAssignmentService {
 
     @Override
     public List<OfficeAssignment> fetchAll() {
-        return officeAssignmentDao.fetchAll();
+        return officeAssignmentDao.findAll();
     }
 }

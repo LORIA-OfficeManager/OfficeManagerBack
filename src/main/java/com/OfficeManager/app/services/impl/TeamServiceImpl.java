@@ -1,15 +1,15 @@
-package com.OfficeManager.services.impl;
+package com.OfficeManager.app.services.impl;
 
-import com.OfficeManager.daos.ITeamDao;
-import com.OfficeManager.entities.Team;
-import com.OfficeManager.services.interfaces.ITeamService;
+import com.OfficeManager.app.daos.ITeamDao;
+import com.OfficeManager.app.entities.Team;
+import com.OfficeManager.app.services.interfaces.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Service("officeService")
+@Service("teamService")
 @Transactional
 public class TeamServiceImpl implements ITeamService {
 
@@ -18,6 +18,6 @@ public class TeamServiceImpl implements ITeamService {
 
     @Override
     public List<Team> fetchAll() {
-        return teamDao.fetchAll();
+        return teamDao.findAll();
     }
 }
