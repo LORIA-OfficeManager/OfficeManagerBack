@@ -14,6 +14,10 @@ public class Person {
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
+    public Person(){
+
+    }
+
     public Person(String firstName, String lastName, Boolean isManager) {
         super();
         this.firstName = firstName;

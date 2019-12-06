@@ -18,6 +18,10 @@ public class OfficeAssignment implements Serializable {
     private Person person;
     private Office office;
 
+    public OfficeAssignment(){
+
+    }
+
     public OfficeAssignment(LocalDate startDate, LocalDate endDate) {
         super();
         this.startDate = startDate;

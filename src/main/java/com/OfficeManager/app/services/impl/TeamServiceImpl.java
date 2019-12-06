@@ -20,4 +20,9 @@ public class TeamServiceImpl implements ITeamService {
     public List<Team> fetchAll() {
         return teamDao.findAll();
     }
+
+    @Override
+    public Team saveTeam(Team team) {
+        return teamDao.save(team);
+    }
 }

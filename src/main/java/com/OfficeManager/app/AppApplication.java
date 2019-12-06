@@ -1,6 +1,5 @@
 package com.OfficeManager.app;
 
-import com.OfficeManager.entities.Office;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

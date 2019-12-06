@@ -8,8 +8,4 @@ import java.util.List;
 
 public interface IDepartmentDao extends JpaRepository<Department, Integer> {
 
-//    @Query("SELECT * "
-//            + "FROM DEPARTMENT "
-//    )
-//    public List<Department> fetchAll();
 }

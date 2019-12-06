@@ -20,4 +20,9 @@ public class PersonServiceImpl implements IPersonService {
     public List<Person> fetchAll() {
         return personDao.findAll();
     }
+
+    @Override
+    public Person savePerson(Person person) {
+        return personDao.save(person);
+    }
 }

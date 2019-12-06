@@ -7,4 +7,6 @@ import java.util.List;
 public interface IOfficeAssignmentService {
 
     public List<OfficeAssignment> fetchAll();
+
+    public OfficeAssignment saveOfficeAssignement(OfficeAssignment officeAssignment);
 }

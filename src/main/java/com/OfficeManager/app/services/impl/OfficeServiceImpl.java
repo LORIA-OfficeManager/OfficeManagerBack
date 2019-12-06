@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service("officeService")
 @Transactional
@@ -21,18 +22,13 @@ public class OfficeServiceImpl implements IOfficeService {
         return officeDao.findAll();
     }
 
-//    @Override
-//    public Office findById(Integer id) {
-//        return officeDao.findById(id);
-//    }
-
-//    @Override
-//    public Office findByFullName(Integer num, Integer floor, String building) {
-//        return findByFullName(num,floor,building);
-//    }
+    @Override
+    public Optional<Office> findById(Integer id) {
+        return officeDao.findById(id);
+    }
 
     @Override
-    public Office saveOffice(Integer num, Integer floor, String building, Double size) {
-        return officeDao.save(new Office(size,floor,num,building,""));
+    public Office saveOffice(Office office) {
+        return officeDao.save(office);
     }
 }

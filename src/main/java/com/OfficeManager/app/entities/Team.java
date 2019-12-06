@@ -9,6 +9,10 @@ public class Team {
     private Integer id;
     private String name;
 
+    public Team(){
+
+    }
+
     public Team(String name) {
         super();
         this.name = name;

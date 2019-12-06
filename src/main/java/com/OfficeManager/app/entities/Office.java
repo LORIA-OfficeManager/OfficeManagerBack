@@ -14,6 +14,10 @@ public class Office {
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
+    public Office(){
+
+    }
+
     public Office(Double size, Integer floor, Integer num, String building, String description) {
         super();
         this.size = size;

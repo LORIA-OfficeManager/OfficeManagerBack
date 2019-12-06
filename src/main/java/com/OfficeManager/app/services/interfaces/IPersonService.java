@@ -7,4 +7,6 @@ import java.util.List;
 public interface IPersonService {
 
     public List<Person> fetchAll();
+
+    public Person savePerson(Person person);
 }

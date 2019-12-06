@@ -20,4 +20,9 @@ public class StatusServiceImpl implements IStatusService {
     public List<Status> fetchAll() {
         return statusDao.findAll();
     }
+
+    @Override
+    public Status saveStatus(Status status) {
+        return statusDao.save(status);
+    }
 }

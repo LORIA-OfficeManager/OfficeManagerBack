@@ -8,8 +8,4 @@ import java.util.List;
 
 public interface IOfficeAssignmentDao extends JpaRepository<OfficeAssignment, Integer> {
 
-//    @Query("SELECT * "
-//            + "FROM OFFICE_ASSIGNMENT "
-//    )
-//    public List<OfficeAssignment> fetchAll();
 }

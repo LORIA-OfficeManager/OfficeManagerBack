@@ -7,4 +7,6 @@ import java.util.List;
 public interface ITeamService {
 
     public List<Team> fetchAll();
+
+    public Team saveTeam(Team team);
 }

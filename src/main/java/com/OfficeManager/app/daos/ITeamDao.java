@@ -8,8 +8,4 @@ import java.util.List;
 
 public interface ITeamDao extends JpaRepository<Team, Integer> {
 
-//    @Query("SELECT * "
-//            + "FROM TEAM "
-//    )
-//    public List<Team> fetchAll();
 }

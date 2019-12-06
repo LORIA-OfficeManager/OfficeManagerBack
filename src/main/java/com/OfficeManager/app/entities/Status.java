@@ -10,6 +10,10 @@ public class Status {
     private Double size;
     private String name;
 
+    public Status(){
+
+    }
+
     public Status(Double size, String name) {
         super();
         this.size = size;

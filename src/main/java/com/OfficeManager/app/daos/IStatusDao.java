@@ -8,8 +8,4 @@ import java.util.List;
 
 public interface IStatusDao extends JpaRepository<Status, Integer> {
 
-//    @Query("SELECT * "
-//            + "FROM STATUS "
-//    )
-//    public List<Status> fetchAll();
 }

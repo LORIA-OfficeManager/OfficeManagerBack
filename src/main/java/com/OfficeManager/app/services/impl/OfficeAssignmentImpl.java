@@ -20,4 +20,9 @@ public class OfficeAssignmentImpl implements IOfficeAssignmentService {
     public List<OfficeAssignment> fetchAll() {
         return officeAssignmentDao.findAll();
     }
+
+    @Override
+    public OfficeAssignment saveOfficeAssignement(OfficeAssignment officeAssignment) {
+        return officeAssignmentDao.save(officeAssignment);
+    }
 }

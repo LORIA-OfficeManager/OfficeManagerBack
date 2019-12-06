@@ -9,6 +9,9 @@ public class Department {
     private Integer id;
     private String name;
 
+    public Department(){
+    }
+
     public Department(String name) {
         super();
         this.name = name;

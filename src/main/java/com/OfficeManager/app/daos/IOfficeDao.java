@@ -11,21 +11,4 @@ import java.util.List;
 @Repository
 public interface IOfficeDao extends JpaRepository<Office, Integer> {
 
-//    @Query("SELECT * "
-//            + "FROM OFFICE "
-//            + "WHERE OFFICE_ID = :id"
-//    )
-//    public Office findByOfficeId(@Param("id") Integer office_id);
-//
-//    @Query("SELECT * "
-//            + "FROM OFFICE "
-//            + "WHERE NUM = :num AND FLOOR = :floor AND BUILDING = :building"
-//    )
-//    public Office findByFullName(@Param("num") Integer num, @Param("floor") Integer floor, @Param("building") String building);
-//
-//    @Query("SELECT * "
-//            + "FROM OFFICE "
-//    )
-//    public List<Office> fetchAll();
-
 }
