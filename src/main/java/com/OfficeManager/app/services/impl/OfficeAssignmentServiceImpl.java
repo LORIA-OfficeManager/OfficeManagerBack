@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service("officeAssignmentService")
 @Transactional
-public class OfficeAssignmentImpl implements IOfficeAssignmentService {
+public class OfficeAssignmentServiceImpl implements IOfficeAssignmentService {
 
     @Autowired
     private IOfficeAssignmentDao officeAssignmentDao;
@@ -24,5 +24,20 @@ public class OfficeAssignmentImpl implements IOfficeAssignmentService {
     @Override
     public OfficeAssignment saveOfficeAssignement(OfficeAssignment officeAssignment) {
         return officeAssignmentDao.save(officeAssignment);
+    }
+
+    @Override
+    public List<OfficeAssignment> findByOfficeID(int id) {
+        return officeAssignmentDao.findByOfficeId(id);
+    }
+
+    @Override
+    public Integer findOccupationByOfficeId(int id) {
+        return officeAssignmentDao.findOccupationByOfficeId(id);
+    }
+
+    @Override
+    public Boolean hasStrangerByOfficeId(int id) {
+        return officeAssignmentDao.nbStrangerByOfficeId(id)!=0;
     }
 }

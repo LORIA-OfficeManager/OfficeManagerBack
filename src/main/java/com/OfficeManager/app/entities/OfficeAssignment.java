@@ -22,10 +22,12 @@ public class OfficeAssignment implements Serializable {
 
     }
 
-    public OfficeAssignment(LocalDate startDate, LocalDate endDate) {
+    public OfficeAssignment(LocalDate startDate, LocalDate endDate, Person person, Office office) {
         super();
         this.startDate = startDate;
         this.endDate = endDate;
+        this.person = person;
+        this.office = office;
     }
 
     @Id
