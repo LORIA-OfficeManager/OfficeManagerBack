@@ -17,7 +17,7 @@ before_deploy:
 install:
 - docker-compose up -d
 - sudo chmod -R 777 db_officeManager
-- "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
+- mvn install -DskipTests -B
 deploy:
   provider: script
   skip_cleanup: true
