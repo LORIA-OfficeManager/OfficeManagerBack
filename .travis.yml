@@ -16,7 +16,7 @@ before_deploy:
 - ssh-add /tmp/deploy_key
 install:
 - docker-compose up -d
-- mvn install
+- mvn install -DskipTests -B -Dspring.profiles.active=prod
 deploy:
   provider: script
   skip_cleanup: true
