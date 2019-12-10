@@ -10,10 +10,10 @@ branches:
   only:
   - master
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_a492e0f2af60_key -iv $encrypted_a492e0f2af60_iv -in deploy_rsa.enc -out /tmp/deploy_back -d
+- openssl aes-256-cbc -K $encrypted_17cdd5042447_key -iv $encrypted_17cdd5042447_iv -in deploy_key.enc -out deploy_key -d
 - eval "$(ssh-agent -s)"
-- chmod 600 /tmp/deploy_back
-- ssh-add /tmp/deploy_back
+- chmod 600 /tmp/deploy_key
+- ssh-add /tmp/deploy_key
 install:
 - docker-compose up -d
 - mvn install
@@ -27,10 +27,13 @@ after_deploy:
 - ssh root@92.222.9.74 'chmod 777 /deploy/officemanager-front/script.sh'
 - ssh root@92.222.9.74 '/deploy/officemanager-front/script.sh'
 after_success:
-  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
-  - chmod +x send.sh
-  - ./send.sh success $WEBHOOK_URL
+- wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+- chmod +x send.sh
+- "./send.sh success $WEBHOOK_URL"
 after_failure:
-  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
-  - chmod +x send.sh
-  - ./send.sh failure $WEBHOOK_URL
+- wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+- chmod +x send.sh
+- "./send.sh failure $WEBHOOK_URL"
+
+
+
