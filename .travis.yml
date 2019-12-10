@@ -16,7 +16,8 @@ before_deploy:
 - ssh-add /tmp/deploy_key
 install:
 - docker-compose up -d
-- mvn install -DskipTests -B -Dspring.profiles.active=prod
+- sudo chmod -R 777 db_houseskipper
+- "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 deploy:
   provider: script
   skip_cleanup: true
