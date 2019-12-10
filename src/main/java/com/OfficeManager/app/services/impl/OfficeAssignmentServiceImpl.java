@@ -32,7 +32,7 @@ public class OfficeAssignmentServiceImpl implements IOfficeAssignmentService {
     }
 
     @Override
-    public Integer findOccupationByOfficeId(int id) {
+    public Double findOccupationByOfficeId(int id) {
         return officeAssignmentDao.findOccupationByOfficeId(id);
     }
 

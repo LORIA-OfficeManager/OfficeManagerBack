@@ -11,6 +11,7 @@ public class Person {
     private Integer id;
     private String firstName,lastName;
     private Boolean isManager;
+    private Double size;
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
@@ -18,11 +19,12 @@ public class Person {
 
     }
 
-    public Person(String firstName, String lastName, Boolean isManager) {
+    public Person(String firstName, String lastName, Boolean isManager, Double size) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.isManager = isManager;
+        this.size = size;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,6 +62,15 @@ public class Person {
 
     public void setManager(Boolean manager) {
         isManager = manager;
+    }
+
+    @Column(name = "SIZE", nullable = false)
+    public Double getSize() {
+        return size;
+    }
+
+    public void setSize(Double size) {
+        this.size = size;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL)

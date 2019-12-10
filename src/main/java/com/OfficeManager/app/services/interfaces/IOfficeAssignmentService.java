@@ -13,7 +13,7 @@ public interface IOfficeAssignmentService {
 
     public List<OfficeAssignment> findByOfficeID(int id);
 
-    public Integer findOccupationByOfficeId(int id);
+    public Double findOccupationByOfficeId(int id);
 
     public Boolean hasStrangerByOfficeId(int id);
 }

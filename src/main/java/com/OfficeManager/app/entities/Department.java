@@ -28,7 +28,7 @@ public class Department {
         this.id = id;
     }
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, unique = true)
     public String getName() {
         return name;
     }

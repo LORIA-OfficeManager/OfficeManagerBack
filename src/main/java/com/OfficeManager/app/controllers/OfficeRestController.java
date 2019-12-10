@@ -36,7 +36,7 @@ public class OfficeRestController {
     public ResponseEntity<List<OfficesDto>> getOffices(){
         List<Office> offices = officeService.fetchAll();
         //Liste des occupations par bureau
-        List<Integer> occupations = new ArrayList<Integer>();
+        List<Double> occupations = new ArrayList<Double>();
         for(Office office: offices){
             occupations.add(officeAssignmentService.findOccupationByOfficeId(office.getId()));
         }
@@ -67,8 +67,7 @@ public class OfficeRestController {
         return new ResponseEntity<String>("Bureau avec l'id:"+office.getId()+" bien créé",HttpStatus.CREATED);
     }
 
-
-    private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Integer> occupation, List<Boolean> hasStrangers) {
+    private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Double> occupation, List<Boolean> hasStrangers) {
         List<OfficesDto> officesDtos = new ArrayList<OfficesDto>();
 
         for (int i = 0 ; i < offices.size() ; i++){
@@ -87,7 +86,7 @@ public class OfficeRestController {
         return officesDtos;
     }
 
-    private SingleOfficeDto mapOfficeDtoFromOffice(Office office, List<OfficeAssignment> officeAssignments, Integer occupation, Boolean hasStranger){
+    private SingleOfficeDto mapOfficeDtoFromOffice(Office office, List<OfficeAssignment> officeAssignments, Double occupation, Boolean hasStranger){
         //Pour voir la structure des objets renvoyé cf la photo d'après réunion
         OfficesDto officeDTO = new OfficesDto();
         officeDTO.setId(office.getId());

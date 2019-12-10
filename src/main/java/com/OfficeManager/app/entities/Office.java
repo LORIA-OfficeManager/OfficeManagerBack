@@ -5,7 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "OFFICE")
+@Table(
+        name = "OFFICE",
+        uniqueConstraints= {@UniqueConstraint(columnNames={"floor", "num", "building"})}
+)
 public class Office {
 
     private Integer id, floor, num;

@@ -14,9 +14,9 @@ public interface IOfficeAssignmentDao extends JpaRepository<OfficeAssignment, In
     public List<OfficeAssignment> findByOfficeId(@Param("id") int id);
 
     @Query(
-            value = "SELECT COUNT(*) FROM office_assignment o WHERE o.office_id = :id",
+            value = "SELECT SUM(p.size) FROM office_assignment o NATURAL JOIN person p where o.office_id = :id",
             nativeQuery = true)
-    public Integer findOccupationByOfficeId(@Param("id") int id);
+    public Double findOccupationByOfficeId(@Param("id") int id);
 
     @Query(
             value = "SELECT COUNT(*) FROM office_assignment o WHERE o.office_id = :id AND o.end_date < CURDATE()",

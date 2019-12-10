@@ -1,16 +1,17 @@
 package com.OfficeManager.dtos;
 
 public class OfficesDto {
-    private Integer id, floor, num, occupation;
+    private Integer id, floor, num;
+    private Double occupation;
     private Double size;
     private String building;
     private Boolean hasStranger;
 
-    public Integer getOccupation() {
+    public Double getOccupation() {
         return occupation;
     }
 
-    public void setOccupation(Integer occupation) {
+    public void setOccupation(Double occupation) {
         this.occupation = occupation;
     }
 
