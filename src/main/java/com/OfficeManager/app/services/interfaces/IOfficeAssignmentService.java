@@ -11,7 +11,7 @@ public interface IOfficeAssignmentService {
 
     public OfficeAssignment saveOfficeAssignement(OfficeAssignment officeAssignment);
 
-    public List<OfficeAssignment> findByOfficeID(int id);
+    public List<OfficeAssignment> findByOfficeID(int id, boolean filterCurDate);
 
     public Double findOccupationByOfficeId(int id);
 

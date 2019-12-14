@@ -27,8 +27,8 @@ public class OfficeAssignmentServiceImpl implements IOfficeAssignmentService {
     }
 
     @Override
-    public List<OfficeAssignment> findByOfficeID(int id) {
-        return officeAssignmentDao.findByOfficeId(id);
+    public List<OfficeAssignment> findByOfficeID(int id, boolean filterCurDate) {
+        return filterCurDate ? officeAssignmentDao.findByOfficeIdFilterCurDate(id) : officeAssignmentDao.findByOfficeId(id);
     }
 
     @Override

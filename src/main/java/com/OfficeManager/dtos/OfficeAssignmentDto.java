@@ -15,16 +15,18 @@ public class OfficeAssignmentDto {
         this.person = new PersonDto(officeAssignment.getPerson());
     }
 
+    //timestamp format : nb milisec since 1970
     public long getStartDate() {
-        return startDate.toEpochDay()*24*60*60;
+        return startDate.toEpochDay()*24*60*60*1000;
     }
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    //timestamp format : nb milisec since 1970
     public long getEndDate() {
-        return endDate.toEpochDay()*24*60*60;
+        return endDate.toEpochDay()*24*60*60*1000;
     }
 
     public void setEndDate(LocalDate endDate) {

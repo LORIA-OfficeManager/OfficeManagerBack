@@ -1,6 +1,7 @@
 package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ public class Person {
     private String firstName,lastName;
     private Boolean isManager;
     private Double size;
+    private LocalDate startDateContract, endDateContract;
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
@@ -71,6 +73,24 @@ public class Person {
 
     public void setSize(Double size) {
         this.size = size;
+    }
+
+    @Column(name = "START_DATE_CONTRACT", nullable = false)
+    public LocalDate getStartDateContract() {
+        return startDateContract;
+    }
+
+    public void setStartDateContract(LocalDate startDateContract) {
+        this.startDateContract = startDateContract;
+    }
+
+    @Column(name = "END_DATE_CONTRACT", columnDefinition = "date default '2099-12-31'")
+    public LocalDate getEndDateContract() {
+        return endDateContract;
+    }
+
+    public void setEndDateContract(LocalDate endDateContract) {
+        this.endDateContract = endDateContract;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL)

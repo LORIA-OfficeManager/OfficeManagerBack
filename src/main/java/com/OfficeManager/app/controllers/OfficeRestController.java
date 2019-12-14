@@ -35,10 +35,12 @@ public class OfficeRestController {
     @GetMapping("")
     public ResponseEntity<List<OfficesDto>> getOffices(){
         List<Office> offices = officeService.fetchAll();
+        double occupation = 0.0;
         //Liste des occupations par bureau
         List<Double> occupations = new ArrayList<Double>();
         for(Office office: offices){
-            occupations.add(officeAssignmentService.findOccupationByOfficeId(office.getId()));
+            occupation = officeAssignmentService.findOccupationByOfficeId(office.getId()) == null ? 0 : officeAssignmentService.findOccupationByOfficeId(office.getId());
+            occupations.add(occupation);
         }
         //List de si il y a un étranger par bureau
         List<Boolean> hasStrangers = new ArrayList<Boolean>();
@@ -52,10 +54,11 @@ public class OfficeRestController {
     @GetMapping("{id}")
     public ResponseEntity<SingleOfficeDto> getOffice(@PathVariable Integer id){
         if (officeService.findById(id).isPresent()){
-            List<OfficeAssignment> officeAssignments = officeAssignmentService.findByOfficeID(id);
+            double occupation = officeAssignmentService.findOccupationByOfficeId(id) == null ? 0 : officeAssignmentService.findOccupationByOfficeId(id);
+            List<OfficeAssignment> officeAssignments = officeAssignmentService.findByOfficeID(id, true);
             Office office = officeService.findById(id).get();
             Boolean hasStranger = officeAssignmentService.hasStrangerByOfficeId(id);
-            SingleOfficeDto officeDTO = mapOfficeDtoFromOffice(office, officeAssignments, officeAssignmentService.findOccupationByOfficeId(id), hasStranger);
+            SingleOfficeDto officeDTO = mapOfficeDtoFromOffice(office, officeAssignments, occupation, hasStranger);
             return new ResponseEntity<SingleOfficeDto>(officeDTO, HttpStatus.OK);
         }
         return new ResponseEntity<SingleOfficeDto>(HttpStatus.NO_CONTENT);
