@@ -8,7 +8,7 @@ services:
 - docker
 branches:
   only:
-  - dev
+  - master
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_17cdd5042447_key -iv $encrypted_17cdd5042447_iv -in deploy_key.enc -out /tmp/deploy_key -d
 - eval "$(ssh-agent -s)"
@@ -23,7 +23,7 @@ deploy:
   skip_cleanup: true
   script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/officemanager-back
   on:
-    branch: dev
+    branch: master
 after_deploy:
 - ssh root@92.222.9.74 'chmod 777 /deploy/officemanager-back/script.sh'
 - ssh root@92.222.9.74 '/deploy/officemanager-back/script.sh'
