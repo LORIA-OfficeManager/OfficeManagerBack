@@ -16,7 +16,7 @@ before_deploy:
 - ssh-add /tmp/deploy_key
 install:
 - docker-compose up -d
-- sudo chmod -R 777 db_officeManager
+- sudo chmod -R 777 db_officeManager/*
 - mvn install
 deploy:
   provider: script
