@@ -10,7 +10,7 @@ branches:
   only:
   - dev
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_17cdd5042447_key -iv $encrypted_17cdd5042447_iv -in deploy_key.enc -out deploy_key -d
+- openssl aes-256-cbc -K $encrypted_17cdd5042447_key -iv $encrypted_17cdd5042447_iv -in deploy_key.enc -out /tmp/deploy_key -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/deploy_key
 - ssh-add /tmp/deploy_key
