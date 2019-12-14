@@ -16,13 +16,12 @@ before_deploy:
 - ssh-add /tmp/deploy_key
 install:
 - docker-compose up -d
-- sudo chmod -R 777 db_officeManager
 - mvn install
+- sudo chmod -R 777 db_officeManager
 deploy:
   provider: script
   skip_cleanup: true
   script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/officemanager-back
-	 sudo chmod -R 777 db_officeManager
   on:
     branch: dev
 after_deploy:
