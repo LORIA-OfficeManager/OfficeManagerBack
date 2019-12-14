@@ -21,9 +21,8 @@ install:
 deploy:
   provider: script
   skip_cleanup: true
-  script: 
- - sudo chmod -R 777 db_officeManager
- - rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/officemanager-back
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/officemanager-back
+	 sudo chmod -R 777 db_officeManager
   on:
     branch: dev
 after_deploy:
