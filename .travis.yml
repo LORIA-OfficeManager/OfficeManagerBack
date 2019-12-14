@@ -17,7 +17,7 @@ before_deploy:
 install:
 - docker-compose up -d
 - sudo chmod -R 777 db_officeManager
-- mvn install -DskipTests -B
+- "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 deploy:
   provider: script
   skip_cleanup: true
@@ -25,8 +25,8 @@ deploy:
   on:
     branch: dev
 after_deploy:
-- ssh root@92.222.9.74 'chmod 777 /deploy/officemanager-front/script.sh'
-- ssh root@92.222.9.74 '/deploy/officemanager-front/script.sh'
+- ssh root@92.222.9.74 'chmod 777 /deploy/officemanager-back/script.sh'
+- ssh root@92.222.9.74 '/deploy/officemanager-back/script.sh'
 after_success:
 - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
 - chmod +x send.sh
