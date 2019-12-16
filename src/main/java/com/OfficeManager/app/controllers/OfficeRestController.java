@@ -8,19 +8,14 @@ import com.OfficeManager.app.services.impl.OfficeServiceImpl;
 import com.OfficeManager.dtos.OfficeAssignmentDto;
 import com.OfficeManager.dtos.OfficesDto;
 import com.OfficeManager.dtos.SingleOfficeDto;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 @RestController
