@@ -10,10 +10,12 @@ import java.util.Set;
 public class Person {
 
     private Integer id;
-    private String firstName,lastName;
+    private String firstName,lastName, email;
     private Boolean isManager;
-    private Double size;
     private LocalDate startDateContract, endDateContract;
+    private Status status;
+    private Team team;
+    private Department department;
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
@@ -21,13 +23,19 @@ public class Person {
 
     }
 
-    public Person(String firstName, String lastName, Boolean isManager, Double size) {
-        super();
+    public Person(Integer id, String firstName, String lastName, String email, Boolean isManager, LocalDate startDateContract, LocalDate endDateContract, Status status, Team team, Department department) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.isManager = isManager;
-        this.size = size;
+        this.startDateContract = startDateContract;
+        this.endDateContract = endDateContract;
+        this.status = status;
+        this.team = team;
+        this.department = department;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PERSON_ID")
@@ -66,15 +74,6 @@ public class Person {
         isManager = manager;
     }
 
-    @Column(name = "SIZE", nullable = false)
-    public Double getSize() {
-        return size;
-    }
-
-    public void setSize(Double size) {
-        this.size = size;
-    }
-
     @Column(name = "START_DATE_CONTRACT", nullable = false)
     public LocalDate getStartDateContract() {
         return startDateContract;
@@ -93,6 +92,15 @@ public class Person {
         this.endDateContract = endDateContract;
     }
 
+    @Column(name = "EMAIL", nullable = false, unique = true)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL)
     public Set<OfficeAssignment> getAssignments() {
         return assignments;
@@ -102,4 +110,30 @@ public class Person {
         this.assignments = assignments;
     }
 
+    @ManyToOne(optional = false)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @ManyToOne()
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    @ManyToOne(optional = false)
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 }

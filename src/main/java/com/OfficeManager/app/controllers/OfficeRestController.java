@@ -5,15 +5,14 @@ import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
 import com.OfficeManager.app.services.impl.OfficeAssignmentServiceImpl;
 import com.OfficeManager.app.services.impl.OfficeServiceImpl;
+import com.OfficeManager.app.services.impl.StatusServiceImpl;
 import com.OfficeManager.dtos.OfficeAssignmentDto;
 import com.OfficeManager.dtos.OfficesDto;
 import com.OfficeManager.dtos.SingleOfficeDto;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -32,15 +31,16 @@ public class OfficeRestController {
     @Autowired
     OfficeAssignmentServiceImpl officeAssignmentService;
 
+    @Autowired
+    StatusServiceImpl statusService;
+
     @GetMapping("")
     public ResponseEntity<List<OfficesDto>> getOffices(){
         List<Office> offices = officeService.fetchAll();
-        double occupation = 0.0;
         //Liste des occupations par bureau
         List<Double> occupations = new ArrayList<Double>();
         for(Office office: offices){
-            occupation = officeAssignmentService.findOccupationByOfficeId(office.getId()) == null ? 0 : officeAssignmentService.findOccupationByOfficeId(office.getId());
-            occupations.add(occupation);
+            occupations.add(this.findOccupationByOfficeId(office.getId()));
         }
         //List de si il y a un étranger par bureau
         List<Boolean> hasStrangers = new ArrayList<Boolean>();
@@ -54,11 +54,10 @@ public class OfficeRestController {
     @GetMapping("{id}")
     public ResponseEntity<SingleOfficeDto> getOffice(@PathVariable Integer id){
         if (officeService.findById(id).isPresent()){
-            double occupation = officeAssignmentService.findOccupationByOfficeId(id) == null ? 0 : officeAssignmentService.findOccupationByOfficeId(id);
             List<OfficeAssignment> officeAssignments = officeAssignmentService.findByOfficeID(id, true);
             Office office = officeService.findById(id).get();
             Boolean hasStranger = officeAssignmentService.hasStrangerByOfficeId(id);
-            SingleOfficeDto officeDTO = mapOfficeDtoFromOffice(office, officeAssignments, occupation, hasStranger);
+            SingleOfficeDto officeDTO = mapOfficeDtoFromOffice(office, officeAssignments, this.findOccupationByOfficeId(office.getId()), hasStranger);
             return new ResponseEntity<SingleOfficeDto>(officeDTO, HttpStatus.OK);
         }
         return new ResponseEntity<SingleOfficeDto>(HttpStatus.NO_CONTENT);
@@ -114,6 +113,17 @@ public class OfficeRestController {
         singleOfficeDto.setPersons(officeAssignmentDto);
 
         return singleOfficeDto;
+    }
+
+    private Double findOccupationByOfficeId(int id){
+        List<Integer> statusId = officeAssignmentService.findAllStatusByOfficeId(id);
+        Double sum = 0.0;
+
+        for (Integer i: statusId) {
+            sum += statusService.findById(i).getSize();
+        }
+
+        return sum;
     }
 
 }

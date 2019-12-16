@@ -9,4 +9,6 @@ public interface IStatusService {
     public List<Status> fetchAll();
 
     public Status saveStatus(Status status);
+
+    public Status findById(int id);
 }

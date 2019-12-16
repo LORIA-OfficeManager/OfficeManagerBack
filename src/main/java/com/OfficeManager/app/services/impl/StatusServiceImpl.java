@@ -25,4 +25,7 @@ public class StatusServiceImpl implements IStatusService {
     public Status saveStatus(Status status) {
         return statusDao.save(status);
     }
+
+    @Override
+    public Status findById(int id) { return statusDao.getOne(id); }
 }

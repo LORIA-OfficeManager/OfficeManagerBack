@@ -8,14 +8,16 @@ public class Team {
 
     private Integer id;
     private String name;
+    private Department department;
 
     public Team(){
 
     }
 
-    public Team(String name) {
-        super();
+    public Team(Integer id, String name, Department department) {
+        this.id = id;
         this.name = name;
+        this.department = department;
     }
 
     @Id
@@ -36,5 +38,14 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @ManyToOne
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

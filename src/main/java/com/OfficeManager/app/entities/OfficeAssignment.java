@@ -50,7 +50,7 @@ public class OfficeAssignment implements Serializable {
         this.startDate = startDate;
     }
 
-    @Column(name = "END_DATE")
+    @Column(name = "END_DATE", nullable = false)
     public LocalDate getEndDate() {
         return endDate;
     }

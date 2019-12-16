@@ -32,8 +32,8 @@ public class OfficeAssignmentServiceImpl implements IOfficeAssignmentService {
     }
 
     @Override
-    public Double findOccupationByOfficeId(int id) {
-        return officeAssignmentDao.findOccupationByOfficeId(id);
+    public List<Integer> findAllStatusByOfficeId(int id) {
+        return officeAssignmentDao.findAllStatusByOfficeId(id);
     }
 
     @Override
