@@ -1,4 +1,4 @@
-package com.OfficeManager.dtos;
+package com.OfficeManager.app.dtos;
 
 public class OfficesDto {
     private Integer id, floor, num;

@@ -1,4 +1,4 @@
-package com.OfficeManager.dtos;
+package com.OfficeManager.app.dtos;
 
 import com.OfficeManager.app.entities.Person;
 
