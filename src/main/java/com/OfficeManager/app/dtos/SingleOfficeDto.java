@@ -65,11 +65,11 @@ public class SingleOfficeDto {
             this.office.setFloor(floor);
         }
 
-        public Integer getNum() {
+        public String getNum() {
             return office.getNum();
         }
 
-        public void setNum(Integer num) {
+        public void setNum(String num) {
             this.office.setNum(num);
         }
 

@@ -1,6 +1,7 @@
 package com.OfficeManager.app.controllers;
 
 
+import com.OfficeManager.app.dtos.CreateOfficeDto;
 import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
 import com.OfficeManager.app.services.impl.OfficeAssignmentServiceImpl;
@@ -61,9 +62,9 @@ public class OfficeRestController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addOffice(@RequestBody Office office) {
-        officeService.saveOffice(office);
-        return new ResponseEntity<String>("Bureau avec l'id:"+office.getId()+" bien créé",HttpStatus.CREATED);
+    public ResponseEntity<String> addOffice(@RequestBody CreateOfficeDto officeDto) {
+        officeService.saveOffice(createOfficeDtoToOffice(officeDto));
+        return new ResponseEntity<String>("Bureau bien créé",HttpStatus.CREATED);
     }
 
     private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Double> occupation, List<Boolean> hasStrangers) {
@@ -112,7 +113,12 @@ public class OfficeRestController {
         return singleOfficeDto;
     }
 
+    private Office createOfficeDtoToOffice(CreateOfficeDto officeDto){
+        return new Office(officeDto.getSize(), officeDto.getFloor(), officeDto.getNum(), officeDto.getBuilding(), officeDto.getDescription());
+    }
+
     private Double findOccupationByOfficeId(int id){
+        //Ici on fait la somme des tailles des status des personnes présentes dans un bureaux
         List<Integer> statusId = officeAssignmentService.findAllStatusByOfficeId(id);
         Double sum = 0.0;
 

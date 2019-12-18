@@ -11,9 +11,9 @@ import java.util.Set;
 )
 public class Office {
 
-    private Integer id, floor, num;
+    private Integer id, floor;
     private Double size;
-    private String building, description;
+    private String building, description, num;
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
@@ -21,13 +21,13 @@ public class Office {
 
     }
 
-    public Office(Double size, Integer floor, Integer num, String building, String description) {
+    public Office(Double size, Integer floor, String num, String building, String description) {
         super();
         this.size = size;
         this.floor = floor;
         this.num = num;
         this.building = building;
-        this.description = description==""?"Aucune description":description;
+        this.description = (description == null || description.equals(""))?"Aucune description":description;
     }
 
     @Id
@@ -51,11 +51,11 @@ public class Office {
     }
 
     @Column(name = "NUM", nullable = false)
-    public Integer getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(Integer num) {
+    public void setNum(String num) {
         this.num = num;
     }
 

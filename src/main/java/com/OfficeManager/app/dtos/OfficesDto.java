@@ -1,10 +1,10 @@
 package com.OfficeManager.app.dtos;
 
 public class OfficesDto {
-    private Integer id, floor, num;
+    private Integer id, floor;
     private Double occupation;
     private Double size;
-    private String building;
+    private String building, num;
     private Boolean hasStranger;
 
     public Double getOccupation() {
@@ -39,11 +39,11 @@ public class OfficesDto {
         this.floor = floor;
     }
 
-    public Integer getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(Integer num) {
+    public void setNum(String num) {
         this.num = num;
     }
 
