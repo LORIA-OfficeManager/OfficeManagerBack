@@ -41,7 +41,7 @@ public class OfficeAssignment implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "START_DATE", nullable = false)
+    @Column(name = "START_DATE", nullable = false, columnDefinition = "datetime")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -50,7 +50,7 @@ public class OfficeAssignment implements Serializable {
         this.startDate = startDate;
     }
 
-    @Column(name = "END_DATE", nullable = false)
+    @Column(name = "END_DATE", columnDefinition = "datetime default '2099-12-31'")
     public LocalDate getEndDate() {
         return endDate;
     }

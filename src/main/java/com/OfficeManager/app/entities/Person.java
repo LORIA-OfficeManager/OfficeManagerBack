@@ -73,7 +73,7 @@ public class Person {
         isManager = manager;
     }
 
-    @Column(name = "START_DATE_CONTRACT", nullable = false)
+    @Column(name = "START_DATE_CONTRACT", nullable = false, columnDefinition = "datetime")
     public LocalDate getStartDateContract() {
         return startDateContract;
     }
@@ -82,7 +82,7 @@ public class Person {
         this.startDateContract = startDateContract;
     }
 
-    @Column(name = "END_DATE_CONTRACT", columnDefinition = "date default '2099-12-31'")
+    @Column(name = "END_DATE_CONTRACT", columnDefinition = "datetime default '2099-12-31'")
     public LocalDate getEndDateContract() {
         return endDateContract;
     }
