@@ -27,7 +27,7 @@ public class Office {
         this.floor = floor;
         this.num = num;
         this.building = building;
-        this.description = (description == null || description.equals(""))?"Aucune description":description;
+        this.description = description;
     }
 
     @Id
@@ -77,7 +77,7 @@ public class Office {
         this.building = building;
     }
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", columnDefinition = "varchar(255) default 'Aucune description'")
     public String getDescription() {
         return description;
     }

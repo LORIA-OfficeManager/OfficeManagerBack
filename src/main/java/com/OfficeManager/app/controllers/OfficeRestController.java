@@ -1,7 +1,6 @@
 package com.OfficeManager.app.controllers;
 
 
-import com.OfficeManager.app.dtos.CreateOfficeDto;
 import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
 import com.OfficeManager.app.services.impl.OfficeAssignmentServiceImpl;
@@ -61,12 +60,6 @@ public class OfficeRestController {
         return new ResponseEntity<SingleOfficeDto>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addOffice(@RequestBody CreateOfficeDto officeDto) {
-        officeService.saveOffice(createOfficeDtoToOffice(officeDto));
-        return new ResponseEntity<String>("Bureau bien créé",HttpStatus.CREATED);
-    }
-
     private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Double> occupation, List<Boolean> hasStrangers) {
         List<OfficesDto> officesDtos = new ArrayList<OfficesDto>();
 
@@ -111,10 +104,6 @@ public class OfficeRestController {
         singleOfficeDto.setPersons(officeAssignmentDto);
 
         return singleOfficeDto;
-    }
-
-    private Office createOfficeDtoToOffice(CreateOfficeDto officeDto){
-        return new Office(officeDto.getSize(), officeDto.getFloor(), officeDto.getNum(), officeDto.getBuilding(), officeDto.getDescription());
     }
 
     private Double findOccupationByOfficeId(int id){
