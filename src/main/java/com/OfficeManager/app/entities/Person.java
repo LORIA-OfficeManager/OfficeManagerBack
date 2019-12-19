@@ -23,8 +23,7 @@ public class Person {
 
     }
 
-    public Person(Integer id, String firstName, String lastName, String email, Boolean isManager, LocalDate startDateContract, LocalDate endDateContract, Status status, Team team, Department department) {
-        this.id = id;
+    public Person(String firstName, String lastName, String email, Boolean isManager, LocalDate startDateContract, LocalDate endDateContract, Status status, Team team, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

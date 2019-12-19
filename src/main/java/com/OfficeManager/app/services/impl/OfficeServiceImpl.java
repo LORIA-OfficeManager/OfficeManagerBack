@@ -31,4 +31,9 @@ public class OfficeServiceImpl implements IOfficeService {
     public Office saveOffice(Office office) {
         return officeDao.save(office);
     }
+
+    @Override
+    public List<Office> saveAllOffice(List<Office> offices){
+        return officeDao.saveAll(offices);
+    }
 }

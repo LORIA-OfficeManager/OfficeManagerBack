@@ -123,7 +123,7 @@ public class OfficeRestController {
         Double sum = 0.0;
 
         for (Integer i: statusId) {
-            sum += statusService.findById(i).getSize();
+            sum += statusService.findById(i).get().getSize();
         }
 
         return sum;

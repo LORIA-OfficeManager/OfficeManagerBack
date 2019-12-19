@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface IDepartmentDao extends JpaRepository<Department, Integer> {
 
+    @Query(
+            value = "SELECT * FROM department d WHERE d.name = :name",
+            nativeQuery = true)
+    Department findByName(String name);
 }
