@@ -6,31 +6,52 @@ import java.time.LocalDate;
 
 public class OfficeAssignmentDto {
 
-    private LocalDate startDate, endDate;
+    private LocalDate startDateAffectation, endDateAffectation;
+    long startDateContract, endDateContract;
     private PersonDto person;
 
     public OfficeAssignmentDto(OfficeAssignment officeAssignment) {
-        this.startDate = officeAssignment.getStartDate();
-        this.endDate = officeAssignment.getEndDate();
         this.person = new PersonDto(officeAssignment.getPerson());
+        this.startDateAffectation = officeAssignment.getStartDate();
+        this.endDateAffectation = officeAssignment.getEndDate();
+        //date déjà en timestamp
+        this.startDateContract = person.getStartDateContract();
+        this.endDateContract = person.getEndDateContract();
     }
 
     //timestamp format : nb milisec since 1970
-    public long getStartDate() {
-        return startDate.toEpochDay()*24*60*60*1000;
+    public long getStartDateAffectation() {
+        return startDateAffectation.toEpochDay()*24*60*60*1000;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setStartDateAffectation(LocalDate startDateAffectation) {
+        this.startDateAffectation = startDateAffectation;
+    }
+
+    //date déjà en timestamp
+    public long getStartDateContract() {
+        return startDateContract;
+    }
+
+    public void setStartDateContract(long startDateContract) {
+        this.startDateContract = startDateContract;
+    }
+
+    public long getEndDateContract() {
+        return endDateContract;
+    }
+
+    public void setEndDateContract(long endDateContract) {
+        this.endDateContract = endDateContract;
     }
 
     //timestamp format : nb milisec since 1970
-    public long getEndDate() {
-        return endDate.toEpochDay()*24*60*60*1000;
+    public long getEndDateAffectation() {
+        return endDateAffectation.toEpochDay()*24*60*60*1000;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setEndDateAffectation(LocalDate endDateAffectation) {
+        this.endDateAffectation = endDateAffectation;
     }
 
     public Integer getId() {
