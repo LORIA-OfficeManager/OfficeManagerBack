@@ -59,11 +59,11 @@ public class OfficeAssignmentDto {
     }
 
     public String getFirstName() {
-        return person.getFirstName();
+        return person.getFirstname();
     }
 
     public String getLastName() {
-        return person.getLastName();
+        return person.getLastname();
     }
 
     public String getStatus() { return person.getStatus().getName(); }

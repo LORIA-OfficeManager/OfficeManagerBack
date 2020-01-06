@@ -41,7 +41,7 @@ public class PersonDto {
         this.id = id;
     }
 
-    public String getFirstName() {
+    public String getFirstname() {
         return firstName;
     }
 
@@ -49,7 +49,7 @@ public class PersonDto {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
+    public String getLastname() {
         return lastName;
     }
 
@@ -97,7 +97,7 @@ public class PersonDto {
         this.status = status;
     }
 
-    public int getAssignment_id() {
+    public int getIdAssignement() {
         return assignment_id;
     }
 
@@ -121,7 +121,7 @@ public class PersonDto {
         this.department = department;
     }
 
-    public String getOffice() {
+    public String getOfficeName() {
         return office;
     }
 
