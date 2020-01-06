@@ -2,6 +2,7 @@ package com.OfficeManager.app.daos;
 
 import com.OfficeManager.app.entities.OfficeAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,6 +18,12 @@ public interface IOfficeAssignmentDao extends JpaRepository<OfficeAssignment, In
             value = "SELECT * FROM office_assignment o WHERE o.office_id = :id AND (o.start_date <= NOW() AND o.end_date >= NOW())",
             nativeQuery = true)
     public List<OfficeAssignment> findByOfficeIdFilterCurDate(@Param("id") int id);
+
+    @Modifying
+    @Query(
+            value = "UPDATE office_assignment o SET o.end_date = NOW() WHERE o.person_id = :id AND o.end_date >= NOW() ",
+            nativeQuery = true)
+    public void closeOfficeAssignmentByPersonID(@Param("id") int id);
 
     @Query(
             value = "SELECT p.status_status_id FROM office_assignment o NATURAL JOIN person p JOIN status s where s.status_id = p.status_status_id AND o.office_id = :id AND (o.start_date <= NOW() AND o.end_date >= NOW())",

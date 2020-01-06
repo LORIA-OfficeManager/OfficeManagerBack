@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service("officeAssignmentService")
@@ -29,6 +30,11 @@ public class OfficeAssignmentServiceImpl implements IOfficeAssignmentService {
     @Override
     public List<OfficeAssignment> findByOfficeID(int id, boolean filterCurDate) {
         return filterCurDate ? officeAssignmentDao.findByOfficeIdFilterCurDate(id) : officeAssignmentDao.findByOfficeId(id);
+    }
+
+    @Override
+    public void closeLastsOfficeAssignmentByPersonID(int id) {
+        officeAssignmentDao.closeOfficeAssignmentByPersonID(id);
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service("personService")
 @Transactional
@@ -19,6 +20,11 @@ public class PersonServiceImpl implements IPersonService {
     @Override
     public List<Person> fetchAll() {
         return personDao.findAll();
+    }
+
+    @Override
+    public Optional<Person> findById(Integer id) {
+        return personDao.findById(id);
     }
 
     @Override

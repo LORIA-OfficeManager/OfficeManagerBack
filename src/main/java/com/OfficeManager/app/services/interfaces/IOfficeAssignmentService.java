@@ -13,6 +13,8 @@ public interface IOfficeAssignmentService {
 
     public List<OfficeAssignment> findByOfficeID(int id, boolean filterCurDate);
 
+    public void closeLastsOfficeAssignmentByPersonID(int id);
+
     public List<Integer> findAllStatusByOfficeId(int id);
 
     public Boolean hasStrangerByOfficeId(int id);

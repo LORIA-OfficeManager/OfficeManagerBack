@@ -13,7 +13,9 @@ import java.time.LocalDate;
 public class OfficeAssignment implements Serializable {
 
     private Integer id;
-    private LocalDate startDate, endDate;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     private Person person;
     private Office office;
