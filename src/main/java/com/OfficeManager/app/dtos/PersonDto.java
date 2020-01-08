@@ -67,7 +67,7 @@ public class PersonDto {
     }
 
     //timestamp format : nb milisec since 1970
-    protected long getStartDateContract() {
+    public long getStartDateContract() {
         return startDateContract.toEpochDay()*24*60*60*1000;
     }
 
@@ -76,7 +76,7 @@ public class PersonDto {
         this.startDateContract = startDateContract;
     }
 
-    protected long getEndDateContract() {
+    public long getEndDateContract() {
         return endDateContract.toEpochDay()*24*60*60*1000;
     }
 
