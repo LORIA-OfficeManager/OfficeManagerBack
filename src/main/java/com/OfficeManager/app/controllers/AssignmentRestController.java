@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/assignement", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/assignment", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AssignmentRestController {
 
     @Autowired
@@ -40,11 +40,21 @@ public class AssignmentRestController {
 
         Optional<Person> person = personService.findById(idP);
         if (!person.isPresent())
-            return new ResponseEntity<String>("Person "+ idO.toString() +" doesn't exist", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Person "+ idP.toString() +" doesn't exist", HttpStatus.BAD_REQUEST);
         officeAssignmentService.closeLastsOfficeAssignmentByPersonID(idP);
         officeAssignmentService.saveOfficeAssignement(new OfficeAssignment(LocalDate.now().plusDays(1), LocalDate.of(2099,12,31), person.get(), office.get()));
 
 
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @PutMapping("delete/{id}")
+    ResponseEntity<String> removeAssignement(@PathVariable Integer id) {
+        Optional<Person> person = personService.findById(id);
+        if (!person.isPresent()){
+            return new ResponseEntity<String>("Person "+ id.toString() +" doesn't exist", HttpStatus.BAD_REQUEST);
+        }
+        officeAssignmentService.closeLastsOfficeAssignmentByPersonID(id);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

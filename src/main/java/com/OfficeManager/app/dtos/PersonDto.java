@@ -3,6 +3,7 @@ package com.OfficeManager.app.dtos;
 import com.OfficeManager.app.entities.*;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 
 public class PersonDto {
     private Integer id, officeId;
@@ -24,9 +25,14 @@ public class PersonDto {
         this.status = person.getStatus();
         this.team = person.getTeam();
         this.department = person.getDepartment();
-        for(OfficeAssignment oa :person.getAssignments()){
+        for(Iterator<OfficeAssignment> it = person.getAssignments().iterator(); it.hasNext();){
             //Si il existe un assignement actuellement sur cet personne
+            OfficeAssignment oa = it.next();
             if (System.currentTimeMillis() > oa.getStartDate().toEpochDay()*24*60*60*1000 && System.currentTimeMillis() < oa.getEndDate().toEpochDay()*24*60*60*1000){
+                this.assignment_id = oa.getId();
+                this.officeId = oa.getOffice().getId();
+                break;
+            } else if (!it.hasNext()){
                 this.assignment_id = oa.getId();
                 this.officeId = oa.getOffice().getId();
             }
