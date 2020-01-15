@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin()
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/office", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OfficeRestController {

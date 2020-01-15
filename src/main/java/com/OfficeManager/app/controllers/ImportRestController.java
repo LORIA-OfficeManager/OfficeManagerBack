@@ -29,7 +29,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-@CrossOrigin()
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/import", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ImportRestController {

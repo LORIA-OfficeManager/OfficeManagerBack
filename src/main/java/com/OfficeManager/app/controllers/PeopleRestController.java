@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin()
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/people", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PeopleRestController {

@@ -7,6 +7,7 @@ services:
         - 9000:9000
   db:
     image: mysql:8.0.2
+    command: "--innodb_use_native_aio=0"
     environment:
       - MYSQL_DATABASE=officemanager   
       - MYSQL_USER=officemanager

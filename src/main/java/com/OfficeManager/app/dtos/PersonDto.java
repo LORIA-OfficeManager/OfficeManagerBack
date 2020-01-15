@@ -20,7 +20,7 @@ public class PersonDto {
         this.lastName = person.getLastName();
         this.isManager = person.getManager();
         this.startDateContract = person.getStartDateContract();
-        this.endDateContract = person.getStartDateContract();
+        this.endDateContract = person.getEndDateContract();
         this.status = person.getStatus();
         this.team = person.getTeam();
         this.department = person.getDepartment();
