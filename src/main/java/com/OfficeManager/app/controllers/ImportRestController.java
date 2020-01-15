@@ -5,11 +5,9 @@ import com.OfficeManager.app.services.impl.DepartmentServiceImpl;
 import com.OfficeManager.app.services.impl.OfficeServiceImpl;
 import com.OfficeManager.app.services.impl.PersonServiceImpl;
 import com.OfficeManager.app.services.impl.StatusServiceImpl;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +15,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.swing.*;
 import java.io.*;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -58,14 +55,14 @@ public class ImportRestController {
     StatusServiceImpl statusService;
 
 
-    @GetMapping("/office")
+    @PostMapping("/office")
     public ResponseEntity<String> importOffice() throws IOException {
         return new ResponseEntity<String>(importBureau("Liste_bureaux.xlsx"), HttpStatus.OK);
     }
 
-    @GetMapping("/person")
+    @PostMapping("/person")
     public ResponseEntity<String> importPerson() throws IOException {
-        return new ResponseEntity<String>(importAffectation("ListeAffectation.xlsx"), HttpStatus.OK);
+        return new ResponseEntity<String>(importAffectation("Model bureaux Loria.xls"), HttpStatus.OK);
     }
 
     private java.sql.Date convertExcelToDate(double date) {
@@ -77,7 +74,12 @@ public class ImportRestController {
         int etage, ligneActuelle = 0, nbLigneDejaPresente = 0, nbLigneAdd = 0;
         double capacite;
         String numero;
-        ArrayList<Office> offices = new ArrayList<Office>();
+        //pour chaque office on a [0]=batiment [1]=floor [2]=num
+        List<String[]> offices = officeService.fetchAllFullName();
+        List<String> officesName = new ArrayList<String>();
+        for (String[] o : offices) {
+            officesName.add(o[0]+o[1]+o[2]);
+        }
 
         FileInputStream fichier = new FileInputStream(new File(path));
         //créer une instance workbook qui fait référence au fichier xlsx
@@ -92,11 +94,12 @@ public class ImportRestController {
                     batiment = bureau.substring(0, 1);
                     etage = Integer.parseInt(bureau.substring(1, 2));
                     numero = bureau.substring(2);
-                    try{
+
+                    if (!officesName.contains(batiment+etage+numero)) {
                         officeService.saveOffice(new Office(Math.floor(Math.random()*5+1), etage, numero, batiment, ""));
+                        officesName.add(batiment+etage+numero);
                         nbLigneAdd++;
-                    } catch (DataIntegrityViolationException e) {
-                        System.out.println(batiment+etage+numero);
+                    } else {
                         nbLigneDejaPresente++;
                     }
                 }
@@ -113,16 +116,34 @@ public class ImportRestController {
         int nbLigneAjoute = 0;
         String nom, prenom, email, statut, bureau, labo, departement;
         java.sql.Date debut, fin;
+        List<String> emails = personService.fetchAllEmail();
+
+        String[] tab = path.split("\\.");
+        String extension = tab.length >= 2 ? tab[tab.length-1] : "fichier sans extension";
 
         FileInputStream fichier = new FileInputStream(new File(path));
+
         //créer une instance workbook qui fait référence au fichier xlsx
-        XSSFWorkbook wb = new XSSFWorkbook(fichier);
-        XSSFSheet sheet = wb.getSheetAt(0);
+        Workbook wb;
+        Sheet sheet;
+        switch(extension){
+            case "xlsx":
+                wb = new XSSFWorkbook(fichier);
+                break;
+            case "xls":
+                wb = new HSSFWorkbook(fichier);
+                break;
+            default:
+                System.err.println("Fichier incompatible");
+                wb = null;
+                System.exit(1);
+                break;
+        }
+        sheet = wb.getSheetAt(0);
 
-        FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
+        //FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
 
-        System.out.println("Derniere ligne : " + sheet.getLastRowNum());
-        for (ligneActuelle = 2; ligneActuelle < sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
+        for (ligneActuelle = 2; ligneActuelle <= sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
             Row ligne = sheet.getRow(ligneActuelle);
             //Si le bureau n'est pas renseigné, on passe la ligne
             if (!ligne.getCell(OFFICE).getStringCellValue().isEmpty() || true) {
@@ -141,10 +162,11 @@ public class ImportRestController {
                 labo = ligne.getCell(LAB).getStringCellValue();
                 departement = ligne.getCell(DEP).getStringCellValue();
 
-                try {
+                if (!emails.contains(email)) {
                     personService.savePerson(new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusService.findById(0).get(), null, departmentService.findById(0).get()));
+                    emails.add(email);
                     nbLigneAjoute++;
-                } catch (DataIntegrityViolationException e) {
+                } else {
                     nbLigneDejaLa++;
                 }
 

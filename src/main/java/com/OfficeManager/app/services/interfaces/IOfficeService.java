@@ -14,4 +14,6 @@ public interface IOfficeService {
     public Office saveOffice(Office office);
 
     public List<Office> saveAllOffice(List<Office> offices);
+
+    List<String[]> fetchAllFullName();
 }

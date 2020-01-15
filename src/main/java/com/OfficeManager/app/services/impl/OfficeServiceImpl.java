@@ -36,4 +36,9 @@ public class OfficeServiceImpl implements IOfficeService {
     public List<Office> saveAllOffice(List<Office> offices){
         return officeDao.saveAll(offices);
     }
+
+    @Override
+    public List<String[]> fetchAllFullName() {
+        return officeDao.fetchAllFullName();
+    }
 }

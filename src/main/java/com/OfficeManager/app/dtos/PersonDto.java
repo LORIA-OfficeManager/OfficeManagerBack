@@ -5,8 +5,8 @@ import com.OfficeManager.app.entities.*;
 import java.time.LocalDate;
 
 public class PersonDto {
-    private Integer id;
-    private String firstName,lastName, office;
+    private Integer id, officeId;
+    private String firstName,lastName;
     private Boolean isManager;
     private LocalDate startDateContract, endDateContract;
     private Status status;
@@ -28,7 +28,7 @@ public class PersonDto {
             //Si il existe un assignement actuellement sur cet personne
             if (System.currentTimeMillis() > oa.getStartDate().toEpochDay()*24*60*60*1000 && System.currentTimeMillis() < oa.getEndDate().toEpochDay()*24*60*60*1000){
                 this.assignment_id = oa.getId();
-                this.office = oa.getOffice().getBuilding()+oa.getOffice().getFloor()+oa.getOffice().getNum();
+                this.officeId = oa.getOffice().getId();
             }
         }
     }
@@ -121,11 +121,11 @@ public class PersonDto {
         this.department = department;
     }
 
-    public String getOfficeName() {
-        return office;
+    public int getOfficeId() {
+        return officeId;
     }
 
-    public void setOffice(String office) {
-        this.office = office;
+    public void setOffice(int officeId) {
+        this.officeId = officeId;
     }
 }

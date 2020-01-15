@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,5 +31,10 @@ public class PersonServiceImpl implements IPersonService {
     @Override
     public Person savePerson(Person person) {
         return personDao.save(person);
+    }
+
+    @Override
+    public List<String> fetchAllEmail() {
+        return personDao.fetchAllEmail();
     }
 }
