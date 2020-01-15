@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.*;
 import java.io.*;
@@ -23,17 +24,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping(value = "/import", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/import", produces = MediaType.APPLICATION_JSON_VALUE, method = {RequestMethod.POST})
 public class ImportRestController {
 
     @Autowired
     ImportServiceImpl importService;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/office")
-    public ResponseEntity<String> importOffice() throws IOException {
-        return new ResponseEntity<String>(importService.importBureau("Liste_bureaux.xlsx"), HttpStatus.OK);
+    public ResponseEntity<String> importOffice(@RequestParam(value = "file") MultipartFile file) throws IOException {
+        System.out.println(file.getOriginalFilename());
+        return new ResponseEntity<String>(importService.importBureau(file), HttpStatus.OK);
     }
 
     @PostMapping("/person")
