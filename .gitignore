@@ -44,7 +44,7 @@
 
 *.pem
 
-*.properties
+/src/main/resources/application.properties
 
 .gitignore
 
