@@ -44,6 +44,8 @@
 
 *.pem
 
+application.properties
+
 .gitignore
 
 
