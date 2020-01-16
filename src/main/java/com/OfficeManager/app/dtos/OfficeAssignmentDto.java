@@ -66,7 +66,7 @@ public class OfficeAssignmentDto {
         return person.getLastname();
     }
 
-    public String getStatus() { return person.getStatus().getName(); }
+    public String getStatusName() { return person.getStatus().getName(); }
 
     public void setPerson(PersonDto person) {
         this.person = person;
