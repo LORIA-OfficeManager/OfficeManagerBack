@@ -55,6 +55,7 @@ public class AssignmentRestController {
             return new ResponseEntity<String>("Person "+ id.toString() +" doesn't exist", HttpStatus.BAD_REQUEST);
         }
         officeAssignmentService.closeLastsOfficeAssignmentByPersonID(id);
+        
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

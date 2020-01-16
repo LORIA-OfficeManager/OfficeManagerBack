@@ -13,7 +13,7 @@ public class PersonDto {
     private Status status;
     private Team team;
     private Department department;
-    private int assignment_id;
+    private Integer assignment_id;
 
     public PersonDto(Person person) {
         this.id = person.getId();
@@ -33,10 +33,10 @@ public class PersonDto {
                 this.officeId = oa.getOffice().getId();
                 this.officeName = oa.getOffice().getBuilding()+oa.getOffice().getFloor()+oa.getOffice().getNum();
                 break;
-            } else if (!it.hasNext()){
-                this.assignment_id = oa.getId();
-                this.officeId = oa.getOffice().getId();
-                this.officeName = oa.getOffice().getBuilding()+oa.getOffice().getFloor()+oa.getOffice().getNum();
+            } else {
+                this.assignment_id = null;
+                this.officeId = null;
+                this.officeName = null;
             }
         }
     }
@@ -105,11 +105,11 @@ public class PersonDto {
         this.status = status;
     }
 
-    public int getIdAssignement() {
+    public Integer getIdAssignement() {
         return assignment_id;
     }
 
-    public void setAssignment_id(int assignment_id) {
+    public void setAssignment_id(Integer assignment_id) {
         this.assignment_id = assignment_id;
     }
 
