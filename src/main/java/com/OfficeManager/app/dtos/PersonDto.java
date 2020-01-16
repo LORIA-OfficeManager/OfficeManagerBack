@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class PersonDto {
     private Integer id, officeId;
-    private String firstName,lastName;
+    private String firstName,lastName, officeName;
     private Boolean isManager;
     private LocalDate startDateContract, endDateContract;
     private Status status;
@@ -35,6 +35,7 @@ public class PersonDto {
             } else if (!it.hasNext()){
                 this.assignment_id = oa.getId();
                 this.officeId = oa.getOffice().getId();
+                this.officeName = oa.getOffice().getBuilding()+oa.getOffice().getFloor()+oa.getOffice().getNum();
             }
         }
     }
@@ -127,11 +128,19 @@ public class PersonDto {
         this.department = department;
     }
 
-    public int getOfficeId() {
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOffice(String office) {
+        this.officeName = office;
+    }
+
+    public Integer getOfficeId() {
         return officeId;
     }
 
-    public void setOffice(int officeId) {
+    public void setOfficeId(Integer officeId) {
         this.officeId = officeId;
     }
 }
