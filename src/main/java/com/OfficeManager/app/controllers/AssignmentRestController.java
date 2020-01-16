@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/assignment", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/assignment", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
 public class AssignmentRestController {
 
     @Autowired
