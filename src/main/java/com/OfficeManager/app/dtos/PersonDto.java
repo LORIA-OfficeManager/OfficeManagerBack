@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class PersonDto {
     private Integer id, officeId;
-    private String firstName,lastName, officeName;
+    private String firstname, lastname, officeName;
     private Boolean isManager;
     private LocalDate startDateContract, endDateContract;
     private Status status;
@@ -17,8 +17,8 @@ public class PersonDto {
 
     public PersonDto(Person person) {
         this.id = person.getId();
-        this.firstName = person.getFirstName();
-        this.lastName = person.getLastName();
+        this.firstname = person.getFirstName();
+        this.lastname = person.getLastName();
         this.isManager = person.getManager();
         this.startDateContract = person.getStartDateContract();
         this.endDateContract = person.getEndDateContract();
@@ -50,19 +50,19 @@ public class PersonDto {
     }
 
     public String getFirstname() {
-        return firstName;
+        return firstname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public String getLastname() {
-        return lastName;
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     //Protected fait en sorte que cela ne s'affiche pas dans le retour de la requête
