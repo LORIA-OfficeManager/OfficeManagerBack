@@ -33,9 +33,9 @@ public class ImportRestController {
     ImportServiceImpl importService;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping("/office")
+    @PostMapping(value = "/office", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> importOffice(@RequestParam(value = "file") MultipartFile file) throws IOException {
-        System.out.println(file.getOriginalFilename());
+        //System.out.println(file.getOriginalFilename());
         return new ResponseEntity<String>(importService.importBureau(file), HttpStatus.OK);
     }
 

@@ -40,6 +40,8 @@ public class ImportServiceImpl implements IImportService {
     private static final int DEP = 9;
     private static final int nbJoursBetween1900_1970 = 25569;
 
+    private String log;
+
     @Autowired
     IOfficeDao officeDao;
 
@@ -115,12 +117,80 @@ public class ImportServiceImpl implements IImportService {
             }
         }
         fichier.close();
-        return "Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente;
+        log = "Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente;
+        //return "Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente;
+        //return log;
+        return "{\"type\":\""+"importBureau\",\n"+"\"text\":\""+"Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente+"\"}";
+
     }
 
     @Override
     public String importAffectation(String path) throws IOException {
-        return null;
-    }
+        int ligneActuelle = 0;
+        int lignePasse = 0;
+        int nbLigneDejaLa = 0;
+        int nbLigneAjoute = 0;
+        String nom, prenom, email, statut, bureau, labo, departement;
+        java.sql.Date debut, fin;
+        List<String> emails = personDao.fetchAllEmail();
 
+        String[] tab = path.split("\\.");
+        String extension = tab.length >= 2 ? tab[tab.length - 1] : "fichier sans extension";
+
+        FileInputStream fichier = new FileInputStream(new File(path));
+
+        //créer une instance workbook qui fait référence au fichier xlsx
+        Workbook wb;
+        Sheet sheet;
+        switch (extension) {
+            case "xlsx":
+                wb = new XSSFWorkbook(fichier);
+                break;
+            case "xls":
+                wb = new HSSFWorkbook(fichier);
+                break;
+            default:
+                System.err.println("Fichier incompatible");
+                wb = null;
+                System.exit(1);
+                break;
+        }
+        sheet = wb.getSheetAt(0);
+
+        //FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
+
+        for (ligneActuelle = 2; ligneActuelle <= sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
+            Row ligne = sheet.getRow(ligneActuelle);
+            //Si le bureau n'est pas renseigné, on passe la ligne
+            if (!ligne.getCell(OFFICE).getStringCellValue().isEmpty() || true) {
+                bureau = ligne.getCell(OFFICE).getStringCellValue();
+                nom = ligne.getCell(NAME).getStringCellValue().toLowerCase();
+                prenom = ligne.getCell(FIRSTNAME).getStringCellValue().toLowerCase();
+                //Si le mail n'est pas renseigné, on en génère une de type prenom.nom@loria.fr
+                if (ligne.getCell(MAIL).getStringCellValue().isEmpty()) {
+                    email = prenom + "." + nom + "@loria.fr";
+                } else {
+                    email = ligne.getCell(MAIL).getStringCellValue();
+                }
+                debut = convertExcelToDate(ligne.getCell(START).getNumericCellValue());
+                fin = convertExcelToDate(ligne.getCell(END).getNumericCellValue());
+                statut = ligne.getCell(RANK).getStringCellValue();
+                labo = ligne.getCell(LAB).getStringCellValue();
+                departement = ligne.getCell(DEP).getStringCellValue();
+
+                if (!emails.contains(email)) {
+                    personDao.save(new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), null, departmentDao.findById(0).get()));
+                    emails.add(email);
+                    nbLigneAjoute++;
+                } else {
+                    nbLigneDejaLa++;
+                }
+
+            } else {
+                lignePasse++;
+            }
+        }
+        fichier.close();
+        return "{\"type\":\""+"importAffectation\",\n"+"\"text\":\""+"Nb ligne ajoutés : "+nbLigneAjoute+", nb lignes déjà là : "+nbLigneDejaLa+"\"}";
+    }
 }
