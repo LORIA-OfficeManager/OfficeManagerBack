@@ -31,6 +31,7 @@ public class PersonDto {
             if (System.currentTimeMillis() > oa.getStartDate().toEpochDay()*24*60*60*1000 && System.currentTimeMillis() < oa.getEndDate().toEpochDay()*24*60*60*1000){
                 this.assignment_id = oa.getId();
                 this.officeId = oa.getOffice().getId();
+                this.officeName = oa.getOffice().getBuilding()+oa.getOffice().getFloor()+oa.getOffice().getNum();
                 break;
             } else if (!it.hasNext()){
                 this.assignment_id = oa.getId();
