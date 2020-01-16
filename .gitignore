@@ -16,6 +16,7 @@
 \.idea
 *.iws
 *.iml
+*.properties
 *.ipr
 
 ### NetBeans ###
@@ -44,7 +45,7 @@
 
 *.pem
 
-/src/main/resources/application.properties
+application.properties
 
 .gitignore
 
