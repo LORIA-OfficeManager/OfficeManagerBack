@@ -12,4 +12,8 @@ public interface IOfficeService {
     public Optional<Office> findById(Integer id);
 
     public Office saveOffice(Office office);
+
+    public List<Office> saveAllOffice(List<Office> offices);
+
+    List<String[]> fetchAllFullName();
 }

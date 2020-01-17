@@ -11,9 +11,11 @@ public interface IOfficeAssignmentService {
 
     public OfficeAssignment saveOfficeAssignement(OfficeAssignment officeAssignment);
 
-    public List<OfficeAssignment> findByOfficeID(int id);
+    public List<OfficeAssignment> findByOfficeID(int id, boolean filterCurDate);
 
-    public Integer findOccupationByOfficeId(int id);
+    public void closeLastsOfficeAssignmentByPersonID(int id);
+
+    public List<Integer> findAllStatusByOfficeId(int id);
 
     public Boolean hasStrangerByOfficeId(int id);
 }

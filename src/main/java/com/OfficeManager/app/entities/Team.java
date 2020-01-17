@@ -8,14 +8,16 @@ public class Team {
 
     private Integer id;
     private String name;
+    private Department department;
 
     public Team(){
 
     }
 
-    public Team(String name) {
-        super();
+    public Team(Integer id, String name, Department department) {
+        this.id = id;
         this.name = name;
+        this.department = department;
     }
 
     @Id
@@ -29,12 +31,21 @@ public class Team {
         this.id = id;
     }
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, unique = true)
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @ManyToOne
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }
