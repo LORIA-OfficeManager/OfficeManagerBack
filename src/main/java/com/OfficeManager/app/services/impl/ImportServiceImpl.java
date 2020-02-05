@@ -127,13 +127,18 @@ public class ImportServiceImpl implements IImportService {
     }
 
     @Override
-    public String importAffectation(MultipartFile loriatab) throws IOException {
+    public String importAffectation(MultipartFile loriatab, boolean wipe) throws IOException {
         String path = "tata2.xlsx";
         int ligneActuelle = 0;
         int nbPersonneDejaLa = 0;
         int nbPersonneAjoute = 0;
         int nbPersonneUpdate = 0;
         int nbAffectationAjoute = 0;
+
+        if(wipe){
+            officeAssignmentDao.deleteAll();
+            personDao.deleteAll();
+        }
 
         String nom, prenom, email, statut, bureau, labo, departement;
         java.sql.Date debut, fin;
@@ -187,6 +192,7 @@ public class ImportServiceImpl implements IImportService {
             String building, num;
             int floor;
 
+            //Ici la personne n'xiste pas dans la BDD
             if (!emails.contains(email)) {
                 person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), null, departmentDao.findById(0).get());
                 personDao.save(person);
@@ -203,6 +209,7 @@ public class ImportServiceImpl implements IImportService {
                         //log += affectation pas ajouté car bureau machin existe pas
                     nbAffectationAjoute++;
                 }
+            //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
             } else {
                 person = personDao.getByEmail(email);
                 nbPersonneDejaLa++;
