@@ -65,7 +65,7 @@ public class OfficeRestController {
         Office o = officeService.findById(office.getId()).get();
         o.setSize(office.getSize());
         officeService.saveOffice(o);
-        return new ResponseEntity<String>("Le bureau a maintenant une capacité de " + office.getSize(), HttpStatus.OK);
+        return new ResponseEntity<String>("{\"message\":\" Nouvelle taille du bureau : "+office.getSize()+".\"}", HttpStatus.OK);
     }
 
     private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Double> occupation, List<Boolean> hasStrangers) {
