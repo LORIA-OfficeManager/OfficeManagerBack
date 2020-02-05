@@ -39,14 +39,14 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("add")
+    @PostMapping("")
     ResponseEntity<DepartmentDto> addDepartment(@RequestParam(value = "name") String name){
         Department department = new Department(name);
         departmentService.saveDepartment(department);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("{id}")
     ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Integer id, @RequestParam(value = "name") String name){
         if (departmentService.findById(id).isPresent()){
             Department department = departmentService.findById(id).get();
@@ -57,7 +57,7 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     ResponseEntity<DepartmentDto> deleteDepartment(@PathVariable int id){
         if (departmentService.findById(id).isPresent()){
             departmentService.deleteById(id);
