@@ -1,6 +1,7 @@
 package com.OfficeManager.app.controllers;
 
 import com.OfficeManager.app.dtos.DepartmentDto;
+import com.OfficeManager.app.dtos.UpdateDepartmentDto;
 import com.OfficeManager.app.entities.Department;
 import com.OfficeManager.app.services.impl.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,17 +41,17 @@ public class DepartmentRestController {
     }
 
     @PostMapping("")
-    ResponseEntity<DepartmentDto> addDepartment(@RequestParam(value = "name") String name){
-        Department department = new Department(name);
+    ResponseEntity<DepartmentDto> addDepartment(@RequestBody UpdateDepartmentDto updateDepartmentDto){
+        Department department = new Department(updateDepartmentDto.getName());
         departmentService.saveDepartment(department);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Integer id, @RequestParam(value = "name") String name){
+    ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Integer id, @RequestBody UpdateDepartmentDto updateDepartmentDto){
         if (departmentService.findById(id).isPresent()){
             Department department = departmentService.findById(id).get();
-            department.setName(name);
+            department.setName(updateDepartmentDto.getName());
             departmentService.saveDepartment(department);
             return new ResponseEntity<>(HttpStatus.OK);
         }
