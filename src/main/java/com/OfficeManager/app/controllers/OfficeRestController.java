@@ -60,8 +60,8 @@ public class OfficeRestController {
         return new ResponseEntity<SingleOfficeDto>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/updateCapacity")
-    public ResponseEntity<String> updateCapa(@RequestParam(value = "office") OfficesDto office) {
+    @PutMapping("/capacity")
+    public ResponseEntity<String> updateCapa(@RequestBody OfficesDto office) {
         Office o = officeService.findById(office.getId()).get();
         o.setSize(office.getSize());
         officeService.saveOffice(o);
