@@ -41,8 +41,8 @@ public class ImportRestController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> importPerson(@RequestParam(value = "file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> importPerson(@RequestParam(value = "file") MultipartFile file, boolean wipe) throws IOException {
         //System.out.println(file.getOriginalFilename());
-        return new ResponseEntity<String>(importService.importAffectation(file), HttpStatus.OK);
+        return new ResponseEntity<String>(importService.importAffectation(file, wipe), HttpStatus.OK);
     }
 }

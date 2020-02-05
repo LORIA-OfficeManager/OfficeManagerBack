@@ -7,6 +7,6 @@ import java.io.IOException;
 public interface IImportService {
     public String importBureau(MultipartFile loriatab) throws IOException;
 
-    public String importAffectation(MultipartFile loriatab) throws IOException;
+    public String importAffectation(MultipartFile loriatab, boolean wipe) throws IOException;
 
 }
