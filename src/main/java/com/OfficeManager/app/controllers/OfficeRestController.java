@@ -60,6 +60,14 @@ public class OfficeRestController {
         return new ResponseEntity<SingleOfficeDto>(HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("/updateCapacity")
+    public ResponseEntity<String> updateCapa(@RequestParam(value = "id") Integer id, @RequestParam(value = "capacity") Double capacity) {
+        Office o = officeService.findById(id).get();
+        o.setSize(capacity);
+        officeService.saveOffice(o);
+        return new ResponseEntity<String>("Le bureau a maintenant une capacité de " + capacity, HttpStatus.OK);
+    }
+
     private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Double> occupation, List<Boolean> hasStrangers) {
         List<OfficesDto> officesDtos = new ArrayList<OfficesDto>();
 

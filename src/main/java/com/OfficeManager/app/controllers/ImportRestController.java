@@ -39,8 +39,10 @@ public class ImportRestController {
         return new ResponseEntity<String>(importService.importBureau(file), HttpStatus.OK);
     }
 
-    @PostMapping("/person")
-    public ResponseEntity<String> importPerson() throws IOException {
-        return new ResponseEntity<String>(importService.importAffectation("Model bureaux Loria.xls"), HttpStatus.OK);
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> importPerson(@RequestParam(value = "file") MultipartFile file) throws IOException {
+        //System.out.println(file.getOriginalFilename());
+        return new ResponseEntity<String>(importService.importAffectation(file), HttpStatus.OK);
     }
 }
