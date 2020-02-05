@@ -196,13 +196,17 @@ public class ImportServiceImpl implements IImportService {
                     building = bureau.charAt(0)+"";
                     floor = Integer.parseInt(bureau.charAt(1)+"");
                     num = bureau.substring(2);
-                    officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, officeDao.getByName(num, floor, building)));
+                    Office o = officeDao.getByName(num, floor, building);
+                    if (o != null)
+                        officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, o));
+                    else
+                        //log += affectation pas ajouté car bureau machin existe pas
                     nbAffectationAjoute++;
                 }
             } else {
                 person = personDao.getByEmail(email);
                 nbPersonneDejaLa++;
-                OfficeAssignment assignment = person.getCurrentAssignment();
+                OfficeAssignment assignment = getCurrentAssignment(person.getId());
                 //Si le mec avait déjà un bureau d'affecté actuellement
                 if(assignment != null){
                     Office office = assignment.getOffice();
@@ -223,10 +227,19 @@ public class ImportServiceImpl implements IImportService {
             }
         }
         fichier.close();
-        return "{\"type\":\""+"importAffectation\",\n"+"\"text\":\""+"Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +"\"}";
+        return "{\"type\":\""+"importAffectation\",\n"+"\"text\":\""+"Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +", nb affectation ajoutés : "+nbAffectationAjoute+"\"}";
     }
 
     private boolean bureauCorrect(String bureau) {
         return bureau.matches("^[ABC][0-9][0-9][0-9]");
+    }
+
+    private OfficeAssignment getCurrentAssignment(int id){
+        for (OfficeAssignment assignment : personDao.getOne(id).getAssignments()){
+            if (assignment.getStartDate().toEpochDay() <= LocalDate.now().toEpochDay() && assignment.getEndDate().toEpochDay() >= LocalDate.now().toEpochDay()){
+                return assignment;
+            }
+        }
+        return null;
     }
 }

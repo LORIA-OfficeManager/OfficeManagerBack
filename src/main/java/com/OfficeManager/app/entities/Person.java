@@ -35,15 +35,6 @@ public class Person {
         this.department = department;
     }
 
-    public OfficeAssignment getCurrentAssignment(){
-        for (OfficeAssignment assignment : assignments){
-            if (assignment.getStartDate().toEpochDay() <= LocalDate.now().toEpochDay() && assignment.getEndDate().toEpochDay() >= LocalDate.now().toEpochDay()){
-                return assignment;
-            }
-        }
-        return null;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PERSON_ID")
