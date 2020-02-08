@@ -1,6 +1,11 @@
 version: '2'
 
 services:
+  spring:
+    container_name: office_managaer_back
+    build:
+      context: .
+      dockerfile: Dockerfile
   sonar:
    image: sonarqube
    ports:
