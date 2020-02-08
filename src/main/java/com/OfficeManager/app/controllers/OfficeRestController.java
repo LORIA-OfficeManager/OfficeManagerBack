@@ -60,6 +60,14 @@ public class OfficeRestController {
         return new ResponseEntity<SingleOfficeDto>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("/capacity")
+    public ResponseEntity<String> updateCapa(@RequestBody OfficesDto office) {
+        Office o = officeService.findById(office.getId()).get();
+        o.setSize(office.getSize());
+        officeService.saveOffice(o);
+        return new ResponseEntity<String>("{\"message\":\" Nouvelle taille du bureau : "+office.getSize()+".\"}", HttpStatus.OK);
+    }
+
     private List<OfficesDto> mapOfficesDtosFromOffices(List<Office> offices, List<Double> occupation, List<Boolean> hasStrangers) {
         List<OfficesDto> officesDtos = new ArrayList<OfficesDto>();
 

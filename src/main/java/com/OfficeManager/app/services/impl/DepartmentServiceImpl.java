@@ -36,4 +36,8 @@ public class DepartmentServiceImpl implements IDepartmentService {
     public Department saveDepartment(Department department) {
         return departmentDao.save(department);
     }
+
+    public void deleteById(Integer id){
+        departmentDao.deleteById(id);
+    }
 }
