@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("departmentService")
 @Transactional
@@ -22,7 +23,21 @@ public class DepartmentServiceImpl implements IDepartmentService {
     }
 
     @Override
+    public Optional<Department> findById(int id) {
+        return departmentDao.findById(id);
+    }
+
+    @Override
+    public Department findByName(String name) {
+        return departmentDao.findByName(name);
+    }
+
+    @Override
     public Department saveDepartment(Department department) {
         return departmentDao.save(department);
+    }
+
+    public void deleteById(Integer id){
+        departmentDao.deleteById(id);
     }
 }

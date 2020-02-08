@@ -1,28 +1,19 @@
-package com.OfficeManager.app.entities;
+package com.OfficeManager.app.dtos;
 
-import javax.persistence.*;
+import com.OfficeManager.app.entities.Department;
+import com.OfficeManager.app.entities.Team;
 
-@Entity
-@Table(name = "TEAM")
-public class Team {
-
+public class TeamDto {
     private Integer id;
     private String name;
     private Department department;
 
-    public Team(){
-
+    public TeamDto(Team team) {
+        this.id = team.getId();
+        this.name = team.getName();
+        this.department = team.getDepartment();
     }
 
-    public Team(Integer id, String name, Department department) {
-        this.id = id;
-        this.name = name;
-        this.department = department;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TEAM_ID")
     public Integer getId() {
         return id;
     }
@@ -31,7 +22,6 @@ public class Team {
         this.id = id;
     }
 
-    @Column(name = "NAME", nullable = false, unique = true)
     public String getName() {
         return name;
     }
@@ -40,7 +30,6 @@ public class Team {
         this.name = name;
     }
 
-    @ManyToOne
     public Department getDepartment() {
         return department;
     }

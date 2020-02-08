@@ -40,7 +40,7 @@ public class Status {
         this.size = size;
     }
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, unique = true)
     public String getName() {
         return name;
     }

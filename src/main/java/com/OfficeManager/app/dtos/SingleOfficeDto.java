@@ -1,4 +1,4 @@
-package com.OfficeManager.dtos;
+package com.OfficeManager.app.dtos;
 
 import java.util.List;
 
@@ -65,11 +65,11 @@ public class SingleOfficeDto {
             this.office.setFloor(floor);
         }
 
-        public Integer getNum() {
+        public String getNum() {
             return office.getNum();
         }
 
-        public void setNum(Integer num) {
+        public void setNum(String num) {
             this.office.setNum(num);
         }
 

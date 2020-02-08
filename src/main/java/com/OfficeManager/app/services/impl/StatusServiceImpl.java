@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service("statusService")
 @Transactional
@@ -24,5 +25,13 @@ public class StatusServiceImpl implements IStatusService {
     @Override
     public Status saveStatus(Status status) {
         return statusDao.save(status);
+    }
+
+    @Override
+    public Optional<Status> findById(int id) { return statusDao.findById(id); }
+
+    @Override
+    public Status findByName(String name) {
+        return statusDao.findByName(name);
     }
 }

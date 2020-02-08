@@ -13,7 +13,9 @@ import java.time.LocalDate;
 public class OfficeAssignment implements Serializable {
 
     private Integer id;
-    private LocalDate startDate, endDate;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     private Person person;
     private Office office;
@@ -41,7 +43,7 @@ public class OfficeAssignment implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "START_DATE", nullable = false)
+    @Column(name = "START_DATE", nullable = false, columnDefinition = "datetime")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -50,7 +52,7 @@ public class OfficeAssignment implements Serializable {
         this.startDate = startDate;
     }
 
-    @Column(name = "END_DATE", nullable = false)
+    @Column(name = "END_DATE", columnDefinition = "datetime default '2099-12-31'")
     public LocalDate getEndDate() {
         return endDate;
     }
