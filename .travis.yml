@@ -19,7 +19,7 @@ install:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@951.178.82.205:/deploy/officemanager-back
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@51.178.82.205:/deploy/officemanager-back
   on:
     branch: master
 after_deploy:
