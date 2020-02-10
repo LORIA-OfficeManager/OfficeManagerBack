@@ -3,7 +3,7 @@ jdk:
 - openjdk8
 sudo: required
 addons:
-  ssh_known_hosts: 92.222.9.74
+  ssh_known_hosts: 51.178.82.205
 services:
 - docker
 branches:
@@ -15,18 +15,16 @@ before_deploy:
 - chmod 600 /tmp/deploy_key
 - ssh-add /tmp/deploy_key
 install:
-- docker-compose up -d
-- mvn install
-- sudo chmod -R 777 db_officeManager
+- docker-compose up -d --build
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/officemanager-back
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@951.178.82.205:/deploy/officemanager-back
   on:
     branch: master
 after_deploy:
-- ssh root@92.222.9.74 'chmod 777 /deploy/officemanager-back/script.sh'
-- ssh root@92.222.9.74 '/deploy/officemanager-back/script.sh'
+- ssh root@51.178.82.205 'chmod 777 /deploy/officemanager-back/script.sh'
+- ssh root@51.178.82.205 '/deploy/officemanager-back/script.sh'
 after_success:
 - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
 - chmod +x send.sh
@@ -35,6 +33,4 @@ after_failure:
 - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
 - chmod +x send.sh
 - "./send.sh failure $WEBHOOK_URL"
-
-
 
