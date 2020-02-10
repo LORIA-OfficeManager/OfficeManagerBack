@@ -4,8 +4,10 @@
 FROM maven:3.6.0-jdk-11-slim AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
+COPY db_officeManager /home/app/db_officeManager
+RUN chmod 777 -R /home/app/db_officeManager
 RUN mvn -f /home/app/pom.xml clean package
-RUN chmod -R 777 /home/app/db_officeManager
+
 
 #
 # Package stage
