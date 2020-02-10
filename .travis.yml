@@ -16,6 +16,7 @@ before_deploy:
 - ssh-add /tmp/deploy_key
 install:
 - docker-compose up -d --build
+- sudo chmod -R 777 db_officeManager
 deploy:
   provider: script
   skip_cleanup: true
