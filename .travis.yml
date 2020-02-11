@@ -15,6 +15,8 @@ before_deploy:
 - chmod 600 /tmp/deploy_key
 - ssh-add /tmp/deploy_key
 install:
+- mkdir db_officeManager
+- chmod 777 -R db_officeManager
 - docker-compose up -d --build
 deploy:
   provider: script
