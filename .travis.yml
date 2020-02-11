@@ -21,7 +21,7 @@ install:
 deploy:
   provider: script
   skip_cleanup: true
-  script: chmod 777 -R $TRAVIS_BUILD_DIR && chmod 777 -R /home/travis/build/LORIA-OfficeManager/OfficeManagerBack/db_officeManager/ && rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@51.178.82.205:/deploy/officemanager-back
+  script: sudo chmod 777 -R $TRAVIS_BUILD_DIR && sudo chmod 777 -R /home/travis/build/LORIA-OfficeManager/OfficeManagerBack/db_officeManager/ && rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@51.178.82.205:/deploy/officemanager-back
   on:
     branch: master
 after_deploy:
