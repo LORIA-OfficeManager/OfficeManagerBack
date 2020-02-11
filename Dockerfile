@@ -4,7 +4,6 @@
 FROM maven:3.6.0-jdk-11-slim AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
-COPY db_officeManager /home/app/db_officeManager
 RUN mvn -f /home/app/pom.xml clean package
 
 
@@ -12,6 +11,7 @@ RUN mvn -f /home/app/pom.xml clean package
 # Package stage
 #
 FROM openjdk:11-jre-slim
-COPY --from=build /home/app/target/*.jar /usr/local/lib/app.jar
+COPY --from=build /home/app/target/*.jar /usr/local/app.jar
+RUN ls /usr/local/
 EXPOSE 51000
-ENTRYPOINT ["java","-Dserver.port=51000 -jar","/usr/local/lib/app.jar"]
+CMD ["java","-Dserver.port=51000","-jar","/usr/local/app.jar"]
