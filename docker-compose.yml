@@ -26,6 +26,7 @@ services:
     networks:
       spring_db_net: 
       db_net:
+      office-manager-bridge_net:
   phpmyadmin:
     depends_on:
       - db
@@ -64,4 +65,7 @@ networks:
     driver: bridge
   spring_db_net:
     driver: bridge
+  office-manager-bridge_net:
+    name: office-manager-bridge
+
     
