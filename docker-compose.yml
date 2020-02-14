@@ -17,6 +17,7 @@ services:
       - MYSQL_ROOT_HOST=%
     volumes:
       - ./db_officeManager:/var/lib/mysql
+    restart: unless-stopped
     ports:
       - "3306:3306"
       - "33060"
