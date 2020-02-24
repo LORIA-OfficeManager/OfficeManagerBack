@@ -24,9 +24,7 @@ services:
     expose:
       - 3306
     networks:
-      spring_db_net: 
       db_net:
-      office-manager-bridge:
   phpmyadmin:
     depends_on:
       - db
