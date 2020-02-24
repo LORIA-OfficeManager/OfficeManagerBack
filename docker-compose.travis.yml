@@ -54,20 +54,9 @@ services:
       - '51000:51000'
     networks:
       - spring_db_net
-      - office-manager-bridge
     depends_on: 
       - db
       - phpmyadmin
-  angular:
-      container_name: office_manager_front
-      build: '../officemanager-front'
-      volumes:
-        - '.:/app'
-        - '/app/node_modules'
-      ports:
-        - '50000:50000'
-      networks: 
-        - office-manager-bridge
 volumes: 
   db:
     driver: "local"
@@ -75,8 +64,6 @@ networks:
   db_net:
     driver: bridge
   spring_db_net:
-    driver: bridge
-  office-manager-bridge:
     driver: bridge
 
     
