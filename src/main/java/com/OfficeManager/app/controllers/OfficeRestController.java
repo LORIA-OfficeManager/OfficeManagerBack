@@ -3,6 +3,7 @@ package com.OfficeManager.app.controllers;
 
 import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
+import com.OfficeManager.app.entities.Person;
 import com.OfficeManager.app.services.impl.OfficeAssignmentServiceImpl;
 import com.OfficeManager.app.services.impl.OfficeServiceImpl;
 import com.OfficeManager.app.services.impl.StatusServiceImpl;
@@ -43,6 +44,34 @@ public class OfficeRestController {
         List<Boolean> hasStrangers = new ArrayList<Boolean>();
         for(Office office: offices){
             hasStrangers.add(officeAssignmentService.hasStrangerByOfficeId(office.getId()));
+        }
+        List<OfficesDto> officesDTO = mapOfficesDtosFromOffices(offices, occupations, hasStrangers);
+        return new ResponseEntity<List<OfficesDto>>(officesDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("date/{timestamp}")
+    public ResponseEntity<List<OfficesDto>> getOffices(@PathVariable long timestamp){
+        List<Office> offices = officeService.fetchAll();
+        //Liste des occupations par bureau
+        List<Double> occupations = new ArrayList<Double>();
+        List<Boolean> hasStrangers = new ArrayList<Boolean>();
+        for(Office office: offices) {
+            Double occupation = 0.0;
+            boolean strangers =false;
+            List<OfficeAssignment> officeAssignments = officeAssignmentService.findByOfficeID(office.getId(), true);
+            for(OfficeAssignment oa : officeAssignments) {
+                if (timestamp > oa.getStartDate().toEpochDay()*24*60*60*1000 &&
+                   timestamp < oa.getEndDate().toEpochDay()*24*60*60*1000){
+                   occupation += oa.getPerson().getStatus().getSize();
+                 }
+                Person p = oa.getPerson();
+                if ( (timestamp < p.getStartDateContract().toEpochDay()*24*60*60*1000) ||
+                        (timestamp > p.getEndDateContract().toEpochDay()*24*60*60*1000) ){
+                    strangers = true;
+                }
+            }
+            occupations.add(occupation);
+            hasStrangers.add(strangers);
         }
         List<OfficesDto> officesDTO = mapOfficesDtosFromOffices(offices, occupations, hasStrangers);
         return new ResponseEntity<List<OfficesDto>>(officesDTO, HttpStatus.OK);
