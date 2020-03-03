@@ -109,6 +109,18 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("{idD}/teams/{idT}")
+    ResponseEntity<TeamDto> updateTeam(@PathVariable int idD, @PathVariable int idT, @RequestBody UpdateTeamDto updateTeamDto){
+        Optional<Team> optTeam = teamService.findById(idT);
+        if (optTeam.isPresent()){
+            Team team = optTeam.get();
+            team.setName(updateTeamDto.getName());
+            teamService.saveTeam(team);
+            return new ResponseEntity<>(new TeamDto(team), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     public DepartmentDto mapDepartmentToDepartmentDto(Department department){
         DepartmentDto departmentDto = new DepartmentDto();
         departmentDto.setId(department.getId());
