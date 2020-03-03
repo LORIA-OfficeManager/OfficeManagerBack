@@ -3,8 +3,11 @@ package com.OfficeManager.app.controllers;
 import com.OfficeManager.app.dtos.DepartmentDto;
 import com.OfficeManager.app.dtos.TeamDto;
 import com.OfficeManager.app.dtos.UpdateDepartmentDto;
+import com.OfficeManager.app.dtos.UpdateTeamDto;
 import com.OfficeManager.app.entities.Department;
+import com.OfficeManager.app.entities.Team;
 import com.OfficeManager.app.services.impl.DepartmentServiceImpl;
+import com.OfficeManager.app.services.impl.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -21,6 +25,9 @@ public class DepartmentRestController {
 
     @Autowired
     DepartmentServiceImpl departmentService;
+
+    @Autowired
+    TeamServiceImpl teamService;
 
     @GetMapping("")
     ResponseEntity<List<DepartmentDto>> getDepartments(){
@@ -63,6 +70,19 @@ public class DepartmentRestController {
     ResponseEntity<DepartmentDto> deleteDepartment(@PathVariable int id){
         if (departmentService.findById(id).isPresent()){
             departmentService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("{id}/teams")
+    ResponseEntity<DepartmentDto> addTeam(@PathVariable int id, @RequestBody UpdateTeamDto updateTeamDto) {
+        Optional<Department> optDep = departmentService.findById(id);
+        if(optDep.isPresent()) {
+            Department department = optDep.get();
+            Team team = new Team(updateTeamDto.getName());
+            team.setDepartment(department);
+            teamService.saveTeam(team);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

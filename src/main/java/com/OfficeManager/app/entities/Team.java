@@ -13,6 +13,10 @@ public class Team {
 
     public Team(){}
 
+    public Team(String name){
+        this.name = name;
+    }
+
     public Team(Integer id, String name, Department department) {
         this.id = id;
         this.name = name;
