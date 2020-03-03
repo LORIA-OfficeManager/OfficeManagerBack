@@ -1,6 +1,7 @@
 package com.OfficeManager.app.controllers;
 
 import com.OfficeManager.app.dtos.DepartmentDto;
+import com.OfficeManager.app.dtos.TeamDto;
 import com.OfficeManager.app.dtos.UpdateDepartmentDto;
 import com.OfficeManager.app.entities.Department;
 import com.OfficeManager.app.services.impl.DepartmentServiceImpl;
@@ -68,7 +69,15 @@ public class DepartmentRestController {
     }
 
     public DepartmentDto mapDepartmentToDepartmentDto(Department department){
-        return new DepartmentDto(department);
+        DepartmentDto departmentDto = new DepartmentDto();
+        departmentDto.setId(department.getId());
+        departmentDto.setName(department.getName());
+        List<TeamDto> teamsDto = new ArrayList<TeamDto>();
+        department.getTeams().forEach(team -> {
+            teamsDto.add(new TeamDto(team));
+        });
+        departmentDto.setTeams(teamsDto);
+        return departmentDto;
     }
 
 }

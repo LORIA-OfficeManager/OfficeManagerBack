@@ -1,6 +1,7 @@
 package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "TEAM")
@@ -10,9 +11,7 @@ public class Team {
     private String name;
     private Department department;
 
-    public Team(){
-
-    }
+    public Team(){}
 
     public Team(Integer id, String name, Department department) {
         this.id = id;
@@ -40,7 +39,7 @@ public class Team {
         this.name = name;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     public Department getDepartment() {
         return department;
     }

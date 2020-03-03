@@ -1,10 +1,15 @@
 package com.OfficeManager.app.dtos;
 
+import java.util.List;
+
 import com.OfficeManager.app.entities.Department;
 
 public class DepartmentDto {
     private Integer id;
     private String name;
+    private List<TeamDto> teams;
+
+    public DepartmentDto() {}
 
     public DepartmentDto(Department department){
         this.id = department.getId();
@@ -26,4 +31,13 @@ public class DepartmentDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<TeamDto> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<TeamDto> teams) {
+        this.teams = teams;
+    }
+
 }
