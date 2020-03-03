@@ -100,10 +100,10 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{id}/teams/{id}")
-    ResponseEntity<TeamDto> deleteTeam(@PathVariable int id){
-        if (teamService.findById(id).isPresent()){
-            teamService.deleteById(id);
+    @DeleteMapping("{idD}/teams/{idT}")
+    ResponseEntity<TeamDto> deleteTeam(@PathVariable int idD, @PathVariable int idT){
+        if (teamService.findById(idT).isPresent()){
+            teamService.deleteById(idT);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
