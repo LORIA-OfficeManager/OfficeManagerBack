@@ -100,6 +100,16 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping("{id}/teams/{id}")
+    ResponseEntity<TeamDto> deleteTeam(@PathVariable int id){
+        if (teamService.findById(id).isPresent()){
+            teamService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+
     public DepartmentDto mapDepartmentToDepartmentDto(Department department){
         DepartmentDto departmentDto = new DepartmentDto();
         departmentDto.setId(department.getId());

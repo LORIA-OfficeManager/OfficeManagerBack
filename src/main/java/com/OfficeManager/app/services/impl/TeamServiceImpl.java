@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service("teamService")
 @Transactional
@@ -20,6 +21,12 @@ public class TeamServiceImpl implements ITeamService {
     public List<Team> fetchAll() {
         return teamDao.findAll();
     }
+
+    @Override
+    public Optional<Team> findById(int id) { return teamDao.findById(id); }
+
+    @Override
+    public void deleteById(Integer id) { teamDao.deleteById(id); }
 
     @Override
     public Team saveTeam(Team team) {
