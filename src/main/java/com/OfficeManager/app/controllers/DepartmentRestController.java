@@ -88,14 +88,14 @@ public class DepartmentRestController {
     }
 
     @PostMapping("{id}/teams")
-    ResponseEntity<DepartmentDto> addTeam(@PathVariable int id, @RequestBody UpdateTeamDto updateTeamDto) {
+    ResponseEntity<TeamDto> addTeam(@PathVariable int id, @RequestBody UpdateTeamDto updateTeamDto) {
         Optional<Department> optDep = departmentService.findById(id);
         if(optDep.isPresent()) {
             Department department = optDep.get();
             Team team = new Team(updateTeamDto.getName());
             team.setDepartment(department);
             teamService.saveTeam(team);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<TeamDto>(new TeamDto(team), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -108,7 +108,6 @@ public class DepartmentRestController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    
 
     public DepartmentDto mapDepartmentToDepartmentDto(Department department){
         DepartmentDto departmentDto = new DepartmentDto();
