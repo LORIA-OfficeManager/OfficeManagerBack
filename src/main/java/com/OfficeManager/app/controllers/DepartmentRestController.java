@@ -75,6 +75,18 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("{id}/teams")
+    ResponseEntity<List<TeamDto>> getTeam(@PathVariable int id) {
+        Optional<Department> optDep = departmentService.findById(id);
+        if(optDep.isPresent()) {
+            Department department = optDep.get();
+            List<TeamDto> teamsDto = new ArrayList<>();
+            department.getTeams().forEach(team -> teamsDto.add(new TeamDto(team)));
+            return new ResponseEntity<>(teamsDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping("{id}/teams")
     ResponseEntity<DepartmentDto> addTeam(@PathVariable int id, @RequestBody UpdateTeamDto updateTeamDto) {
         Optional<Department> optDep = departmentService.findById(id);
