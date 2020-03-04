@@ -21,4 +21,6 @@ public interface IDepartmentService {
     public void swtichTeamToDefaultDepartment(int id);
 
     public boolean isAuthorisedName(String name);
+
+    public Department getDefault();
 }

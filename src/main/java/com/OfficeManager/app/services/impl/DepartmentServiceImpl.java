@@ -69,4 +69,9 @@ public class DepartmentServiceImpl implements IDepartmentService {
     public boolean isAuthorisedName(String name) {
         return !departmentDao.existsByName(name) && !name.equals(DEFAULT_DEP);
     }
+
+    @Override
+    public Department getDefault() {
+        return departmentDao.findByName(DEFAULT_DEP);
+    }
 }

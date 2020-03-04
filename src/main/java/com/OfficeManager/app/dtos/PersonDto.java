@@ -24,7 +24,7 @@ public class PersonDto {
         this.endDateContract = person.getEndDateContract();
         this.status = person.getStatus();
         this.team = person.getTeam();
-        this.department = person.getDepartment();
+        this.department = person.getTeam().getDepartment();
         for(Iterator<OfficeAssignment> it = person.getAssignments().iterator(); it.hasNext();){
             //Si il existe un assignement actuellement sur cet personne
             OfficeAssignment oa = it.next();
