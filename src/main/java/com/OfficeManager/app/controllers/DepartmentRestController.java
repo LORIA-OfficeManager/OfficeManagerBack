@@ -73,6 +73,7 @@ public class DepartmentRestController {
     @DeleteMapping("{id}")
     ResponseEntity<DepartmentDto> deleteDepartment(@PathVariable int id){
         if (departmentService.findById(id).isPresent()){
+            departmentService.swtichTeamToDefaultDepartment(id);
             departmentService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }

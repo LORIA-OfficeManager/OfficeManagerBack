@@ -15,6 +15,8 @@ import java.util.Optional;
 @Transactional
 public class DepartmentServiceImpl implements IDepartmentService {
 
+    private final static String DEFAULT_DEP = "Loria";
+
     @Autowired
     private IDepartmentDao departmentDao;
 
@@ -41,5 +43,16 @@ public class DepartmentServiceImpl implements IDepartmentService {
     @Override
     public void deleteById(Integer id){
         departmentDao.deleteById(id);
+    }
+
+    @Override
+    public void swtichTeamToDefaultDepartment(int id) {
+        Department Dep = this.findByName(DEFAULT_DEP);
+        if (Dep == null) {
+            Department defaultDep = new Department(DEFAULT_DEP);
+            this.saveDepartment(defaultDep);
+        }
+
+        departmentDao.switcTeamToDefaultDepartment(id, DEFAULT_DEP);
     }
 }

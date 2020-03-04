@@ -17,4 +17,6 @@ public interface IDepartmentService {
     public Department saveDepartment(Department department);
 
     public void deleteById(Integer id);
+
+    public void swtichTeamToDefaultDepartment(int id);
 }
