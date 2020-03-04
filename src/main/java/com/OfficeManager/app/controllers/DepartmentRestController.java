@@ -63,6 +63,12 @@ public class DepartmentRestController {
     ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Integer id, @RequestBody UpdateDepartmentDto updateDepartmentDto){
         if (departmentService.findById(id).isPresent()){
             Department department = departmentService.findById(id).get();
+            Optional<Team> optTeam = teamService.findByName(department.getName());
+            if(optTeam.isPresent()){
+                Team defaultTeam = optTeam.get();
+                defaultTeam.setName(updateDepartmentDto.getName());
+                teamService.saveTeam(defaultTeam);
+            }
             department.setName(updateDepartmentDto.getName());
             departmentService.saveDepartment(department);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -1,6 +1,7 @@
 package com.OfficeManager.app.services.impl;
 
 import com.OfficeManager.app.daos.IDepartmentDao;
+import com.OfficeManager.app.daos.ITeamDao;
 import com.OfficeManager.app.entities.Department;
 import com.OfficeManager.app.entities.Team;
 import com.OfficeManager.app.services.interfaces.IDepartmentService;
@@ -19,6 +20,9 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Autowired
     private IDepartmentDao departmentDao;
+
+    @Autowired
+    TeamServiceImpl teamService;
 
     @Override
     public List<Department> fetchAll() {
@@ -50,6 +54,9 @@ public class DepartmentServiceImpl implements IDepartmentService {
         Department Dep = this.findByName(DEFAULT_DEP);
         if (Dep == null) {
             Department defaultDep = new Department(DEFAULT_DEP);
+            Team team = new Team(DEFAULT_DEP);
+            team.setName(DEFAULT_DEP);
+            teamService.saveTeam(team);
             this.saveDepartment(defaultDep);
         }
 
