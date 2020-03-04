@@ -29,6 +29,9 @@ public class DepartmentRestController {
     @Autowired
     TeamServiceImpl teamService;
 
+
+    /* ----- DEPARTMENT CONTROLLER ----- */
+
     @GetMapping("")
     ResponseEntity<List<DepartmentDto>> getDepartments(){
         ArrayList<DepartmentDto> list = new ArrayList<DepartmentDto>();
@@ -50,17 +53,27 @@ public class DepartmentRestController {
 
     @PostMapping("")
     ResponseEntity<DepartmentDto> addDepartment(@RequestBody UpdateDepartmentDto updateDepartmentDto){
+
+        // Test if the name is authorised
+        if (departmentService.isAuthorisedName(updateDepartmentDto.getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Department department = new Department(updateDepartmentDto.getName());
         departmentService.saveDepartment(department);
         Team team = new Team(updateDepartmentDto.getName());
         team.setDepartment(department);
         teamService.saveTeam(team);
         department.getTeams().add(team);
-        return new ResponseEntity<>(mapDepartmentToDepartmentDto(department),HttpStatus.OK);
+        return new ResponseEntity<DepartmentDto>(mapDepartmentToDepartmentDto(department),HttpStatus.OK);
     }
 
     @PutMapping("{id}")
     ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Integer id, @RequestBody UpdateDepartmentDto updateDepartmentDto){
+
+        // Test if the name is authorised
+        if (departmentService.isAuthorisedName(updateDepartmentDto.getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         if (departmentService.findById(id).isPresent()){
             Department department = departmentService.findById(id).get();
             Optional<Team> optTeam = teamService.findByName(department.getName());
@@ -86,35 +99,64 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
+    /* ----- TEAM CONTROLLER ------ */
+
     @GetMapping("{id}/teams")
     ResponseEntity<List<TeamDto>> getTeam(@PathVariable int id) {
         Optional<Department> optDep = departmentService.findById(id);
         if(optDep.isPresent()) {
             Department department = optDep.get();
-            List<TeamDto> teamsDto = new ArrayList<>();
-            department.getTeams().forEach(team -> teamsDto.add(new TeamDto(team)));
-            return new ResponseEntity<>(teamsDto, HttpStatus.OK);
+            return new ResponseEntity<>(mapDepartmentToDepartmentDto(department).getTeams(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("{id}/teams")
     ResponseEntity<TeamDto> addTeam(@PathVariable int id, @RequestBody UpdateTeamDto updateTeamDto) {
+
+        // Test if the name is authorised
+        if (teamService.isAuthorisedName(updateTeamDto.getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Optional<Department> optDep = departmentService.findById(id);
         if(optDep.isPresent()) {
             Department department = optDep.get();
+
             Team team = new Team(updateTeamDto.getName());
             team.setDepartment(department);
             teamService.saveTeam(team);
+
             return new ResponseEntity<TeamDto>(new TeamDto(team), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("{idD}/teams/{idT}")
+    ResponseEntity<TeamDto> updateTeam(@PathVariable int idD, @PathVariable int idT, @RequestBody UpdateTeamDto updateTeamDto){
+
+        // Test if the name is authorised
+        if (teamService.isAuthorisedName(updateTeamDto.getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Optional<Team> optTeam = teamService.findById(idT);
+        if (optTeam.isPresent()){
+
+            Team team = optTeam.get();
+            team.setName(updateTeamDto.getName());
+            teamService.saveTeam(team);
+
+            return new ResponseEntity<>(new TeamDto(team), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("{idD}/teams/{idT}")
     ResponseEntity<TeamDto> deleteTeam(@PathVariable int idD, @PathVariable int idT){
+
         Optional<Department> optDep = departmentService.findById(idD);
         if (optDep.isPresent()) {
+
             Department department = optDep.get();
             Team defaultTeam = teamService.findByName(department.getName()).get();
             Optional<Team> optTeam = teamService.findById(idT);
@@ -128,18 +170,10 @@ public class DepartmentRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("{idD}/teams/{idT}")
-    ResponseEntity<TeamDto> updateTeam(@PathVariable int idD, @PathVariable int idT, @RequestBody UpdateTeamDto updateTeamDto){
-        Optional<Team> optTeam = teamService.findById(idT);
-        if (optTeam.isPresent()){
-            Team team = optTeam.get();
-            team.setName(updateTeamDto.getName());
-            teamService.saveTeam(team);
-            return new ResponseEntity<>(new TeamDto(team), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 
+    /**
+     * Map the department to the dto
+     */
     public DepartmentDto mapDepartmentToDepartmentDto(Department department){
         DepartmentDto departmentDto = new DepartmentDto();
         departmentDto.setId(department.getId());

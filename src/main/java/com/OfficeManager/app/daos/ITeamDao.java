@@ -19,4 +19,9 @@ public interface ITeamDao extends JpaRepository<Team, Integer> {
     @Modifying
     @Query ("UPDATE Person p SET p.team = (SELECT t FROM Team t WHERE t.name = (SELECT d.name FROM Department d WHERE d.id = :idD)) WHERE p.team.id = :idT")
     void switcPersonToDefaultTeam(@Param("idD") int idD, @Param("idT") int idT);
+
+    @Query(
+            value = "SELECT (count(d) > 0) FROM Team t WHERE t.name = :name"
+    )
+    boolean existsByName(String name);
 }

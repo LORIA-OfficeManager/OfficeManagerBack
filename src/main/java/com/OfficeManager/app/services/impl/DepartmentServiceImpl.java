@@ -16,11 +16,12 @@ import java.util.Optional;
 @Transactional
 public class DepartmentServiceImpl implements IDepartmentService {
 
-    private final static String DEFAULT_DEP = "Loria";
+    public final static String DEFAULT_DEP = "Loria";
 
     @Autowired
     private IDepartmentDao departmentDao;
 
+    // à supprimer plus tard cf (*)
     @Autowired
     TeamServiceImpl teamService;
 
@@ -51,6 +52,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public void swtichTeamToDefaultDepartment(int id) {
+        // (*) A lancer au startup de l'app plus tard //
         Department Dep = this.findByName(DEFAULT_DEP);
         if (Dep == null) {
             Department defaultDep = new Department(DEFAULT_DEP);
@@ -59,7 +61,12 @@ public class DepartmentServiceImpl implements IDepartmentService {
             teamService.saveTeam(team);
             this.saveDepartment(defaultDep);
         }
-
+        // ------------------------------------- //
         departmentDao.switcTeamToDefaultDepartment(id, DEFAULT_DEP);
+    }
+
+    @Override
+    public boolean isAuthorisedName(String name) {
+        return !departmentDao.existsByName(name) && !name.equals(DEFAULT_DEP);
     }
 }

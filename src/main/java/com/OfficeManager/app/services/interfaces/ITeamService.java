@@ -18,4 +18,6 @@ public interface ITeamService {
     public Team saveTeam(Team team);
 
     public void switchPersonTODefaultTeam(int idD, int idT);
+
+    public boolean isAuthorisedName(String name);
 }

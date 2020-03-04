@@ -42,4 +42,9 @@ public class TeamServiceImpl implements ITeamService {
     public void switchPersonTODefaultTeam(int idD, int idT) {
         teamDao.switcPersonToDefaultTeam(idD, idT);
     }
+
+    @Override
+    public boolean isAuthorisedName(String name) {
+        return !teamDao.existsByName(name) && !name.equals(DepartmentServiceImpl.DEFAULT_DEP);
+    }
 }

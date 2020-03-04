@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface IDepartmentDao extends JpaRepository<Department, Integer> {
 
     @Query(
@@ -20,5 +18,10 @@ public interface IDepartmentDao extends JpaRepository<Department, Integer> {
             value = "UPDATE Team t SET department = (SELECT d FROM Department d WHERE d.name = :default) WHERE t.department.id = :id"
     )
     void switcTeamToDefaultDepartment(@Param("id") int id, @Param("default") String defaultDep);
+
+    @Query(
+            value = "SELECT (count(d) > 0) FROM Department d WHERE d.name = :name"
+    )
+    boolean existsByName(String name);
 
 }
