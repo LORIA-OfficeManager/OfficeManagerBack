@@ -14,7 +14,7 @@ public class Department {
 
     private Integer id;
     private String name;
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<Team>();
 
     public Department(){}
 
@@ -43,7 +43,7 @@ public class Department {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     public Set<Team> getTeams() {
         return this.teams;
     }

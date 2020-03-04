@@ -52,7 +52,11 @@ public class DepartmentRestController {
     ResponseEntity<DepartmentDto> addDepartment(@RequestBody UpdateDepartmentDto updateDepartmentDto){
         Department department = new Department(updateDepartmentDto.getName());
         departmentService.saveDepartment(department);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Team team = new Team(updateDepartmentDto.getName());
+        team.setDepartment(department);
+        teamService.saveTeam(team);
+        department.getTeams().add(team);
+        return new ResponseEntity<>(mapDepartmentToDepartmentDto(department),HttpStatus.OK);
     }
 
     @PutMapping("{id}")
@@ -102,9 +106,17 @@ public class DepartmentRestController {
 
     @DeleteMapping("{idD}/teams/{idT}")
     ResponseEntity<TeamDto> deleteTeam(@PathVariable int idD, @PathVariable int idT){
-        if (teamService.findById(idT).isPresent()){
-            teamService.deleteById(idT);
-            return new ResponseEntity<>(HttpStatus.OK);
+        Optional<Department> optDep = departmentService.findById(idD);
+        if (optDep.isPresent()) {
+            Department department = optDep.get();
+            Team defaultTeam = teamService.findByName(department.getName()).get();
+            Optional<Team> optTeam = teamService.findById(idT);
+
+            if (optTeam.isPresent()) {
+                teamService.switchPersonTODefaultTeam(idD, idT);
+                teamService.deleteById(idT);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

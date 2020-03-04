@@ -11,7 +11,11 @@ public interface ITeamService {
 
     public Optional<Team> findById(int id);
 
+    public Optional<Team> findByName(String name);
+
     public void deleteById(Integer id);
 
     public Team saveTeam(Team team);
+
+    public void switchPersonTODefaultTeam(int idD, int idT);
 }
