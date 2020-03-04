@@ -55,7 +55,7 @@ public class DepartmentRestController {
     ResponseEntity<DepartmentDto> addDepartment(@RequestBody UpdateDepartmentDto updateDepartmentDto){
 
         // Test if the name is authorised
-        if (departmentService.isAuthorisedName(updateDepartmentDto.getName()))
+        if (!departmentService.isAuthorisedName(updateDepartmentDto.getName()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Department department = new Department(updateDepartmentDto.getName());
@@ -71,7 +71,7 @@ public class DepartmentRestController {
     ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Integer id, @RequestBody UpdateDepartmentDto updateDepartmentDto){
 
         // Test if the name is authorised
-        if (departmentService.isAuthorisedName(updateDepartmentDto.getName()))
+        if (!departmentService.isAuthorisedName(updateDepartmentDto.getName()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         if (departmentService.findById(id).isPresent()){
@@ -116,7 +116,7 @@ public class DepartmentRestController {
     ResponseEntity<TeamDto> addTeam(@PathVariable int id, @RequestBody UpdateTeamDto updateTeamDto) {
 
         // Test if the name is authorised
-        if (teamService.isAuthorisedName(updateTeamDto.getName()))
+        if (!teamService.isAuthorisedName(updateTeamDto.getName()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Optional<Department> optDep = departmentService.findById(id);
@@ -136,7 +136,7 @@ public class DepartmentRestController {
     ResponseEntity<TeamDto> updateTeam(@PathVariable int idD, @PathVariable int idT, @RequestBody UpdateTeamDto updateTeamDto){
 
         // Test if the name is authorised
-        if (teamService.isAuthorisedName(updateTeamDto.getName()))
+        if (!teamService.isAuthorisedName(updateTeamDto.getName()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Optional<Team> optTeam = teamService.findById(idT);
