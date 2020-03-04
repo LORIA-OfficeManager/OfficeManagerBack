@@ -21,7 +21,7 @@ public interface ITeamDao extends JpaRepository<Team, Integer> {
     void switcPersonToDefaultTeam(@Param("idD") int idD, @Param("idT") int idT);
 
     @Query(
-            value = "SELECT (count(d) > 0) FROM Team t WHERE t.name = :name"
+            value = "SELECT (count(t) > 0) FROM Team t WHERE t.name = :name"
     )
     boolean existsByName(String name);
 }
