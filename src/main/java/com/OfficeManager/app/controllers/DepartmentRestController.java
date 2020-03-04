@@ -84,7 +84,7 @@ public class DepartmentRestController {
             }
             department.setName(updateDepartmentDto.getName());
             departmentService.saveDepartment(department);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(mapDepartmentToDepartmentDto(department), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
