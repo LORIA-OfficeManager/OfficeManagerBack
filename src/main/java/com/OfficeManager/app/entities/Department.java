@@ -43,7 +43,7 @@ public class Department {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     public Set<Team> getTeams() {
         return this.teams;
     }
