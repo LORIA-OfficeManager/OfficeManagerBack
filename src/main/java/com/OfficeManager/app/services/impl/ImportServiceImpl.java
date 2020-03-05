@@ -1,6 +1,7 @@
 package com.OfficeManager.app.services.impl;
 
 import com.OfficeManager.app.daos.*;
+import com.OfficeManager.app.dtos.MessageDto;
 import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
 import com.OfficeManager.app.entities.Person;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import sun.plugin2.message.Message;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,8 @@ public class ImportServiceImpl implements IImportService {
     private static final int LAB = 8;
     private static final int DEP = 9;
     private static final int nbJoursBetween1900_1970 = 25569;
+    private static final int LIGNE_START_BUREAU = 4;
+    private static final int LIGNE_START_AFFECTATION = 2;
 
     private String log;
 
@@ -62,7 +66,7 @@ public class ImportServiceImpl implements IImportService {
     }
 
     @Override
-    public String importBureau(MultipartFile loriatab) throws IOException {
+    public MessageDto importBureau(MultipartFile loriatab) throws IOException {
         String path = "tata.xlsx";
         String batiment, bureau;
         int etage, ligneActuelle = 0, nbLigneDejaPresente = 0, nbLigneAdd = 0;
@@ -78,6 +82,7 @@ public class ImportServiceImpl implements IImportService {
         String[] tab = path.split("\\.");
         String extension = tab.length >= 2 ? tab[tab.length-1] : "fichier sans extension";
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
+        file.deleteOnExit();
         loriatab.transferTo(file);
         FileInputStream fichier = new FileInputStream(file);
 
@@ -99,7 +104,7 @@ public class ImportServiceImpl implements IImportService {
         }
         sheet = wb.getSheetAt(0);
 
-        for (ligneActuelle = 4 ; ligneActuelle <= sheet.getLastRowNum() ; ligneActuelle++) {
+        for (ligneActuelle = LIGNE_START_BUREAU ; ligneActuelle <= sheet.getLastRowNum() ; ligneActuelle++) {
             Row ligne = sheet.getRow(ligneActuelle);
             for (Cell cell : ligne) {
                 if (!cell.getStringCellValue().isEmpty()) {
@@ -120,14 +125,15 @@ public class ImportServiceImpl implements IImportService {
         }
         fichier.close();
         log = "Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente;
-        //return "Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente;
-        //return log;
-        return "{\"type\":\""+"importBureau\",\n"+"\"text\":\""+"Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente+"\"}";
 
+        MessageDto mes = new MessageDto();
+        mes.setType("importBureau");
+        mes.setMessage("Nb bureaux ajoutés : "+nbLigneAdd+", nb bureaux déjà dans la base de données : "+nbLigneDejaPresente);
+        return mes;
     }
 
     @Override
-    public String importAffectation(MultipartFile loriatab, boolean wipe) throws IOException {
+    public MessageDto importAffectation(MultipartFile loriatab, boolean wipe) throws IOException {
         String path = "tata2.xlsx";
         int ligneActuelle = 0;
         int nbPersonneDejaLa = 0;
@@ -147,6 +153,7 @@ public class ImportServiceImpl implements IImportService {
         String[] tab = path.split("\\.");
         String extension = tab.length >= 2 ? tab[tab.length - 1] : "fichier sans extension";
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
+        file.deleteOnExit();
         loriatab.transferTo(file);
         FileInputStream fichier = new FileInputStream(file);
 
@@ -170,7 +177,7 @@ public class ImportServiceImpl implements IImportService {
 
         //FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
 
-        for (ligneActuelle = 2; ligneActuelle <= sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
+        for (ligneActuelle = LIGNE_START_AFFECTATION; ligneActuelle <= sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
             Row ligne = sheet.getRow(ligneActuelle);
 
             bureau = ligne.getCell(OFFICE).getStringCellValue();
@@ -234,7 +241,10 @@ public class ImportServiceImpl implements IImportService {
             }
         }
         fichier.close();
-        return "{\"type\":\""+"importAffectation\",\n"+"\"text\":\""+"Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +", nb affectation ajoutés : "+nbAffectationAjoute+"\"}";
+        MessageDto mes = new MessageDto();
+        mes.setType("importAffectation");
+        mes.setMessage("Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +", nb affectation ajoutés : "+nbAffectationAjoute);
+        return mes;
     }
 
     private boolean bureauCorrect(String bureau) {
