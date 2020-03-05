@@ -21,7 +21,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
     @Autowired
     private IDepartmentDao departmentDao;
 
-    // à supprimer plus tard cf (*)
     @Autowired
     TeamServiceImpl teamService;
 
@@ -51,27 +50,23 @@ public class DepartmentServiceImpl implements IDepartmentService {
     }
 
     @Override
-    public void swtichTeamToDefaultDepartment(int id) {
-        // (*) A lancer au startup de l'app plus tard //
-        Department Dep = this.findByName(DEFAULT_DEP);
-        if (Dep == null) {
-            Department defaultDep = new Department(DEFAULT_DEP);
-            Team team = new Team(DEFAULT_DEP);
-            team.setName(DEFAULT_DEP);
-            teamService.saveTeam(team);
-            this.saveDepartment(defaultDep);
-        }
-        // ------------------------------------- //
-        departmentDao.switcTeamToDefaultDepartment(id, DEFAULT_DEP);
-    }
-
-    @Override
     public boolean isAuthorisedName(String name) {
         return !departmentDao.existsByName(name) && !name.equals(DEFAULT_DEP);
     }
 
     @Override
     public Department getDefault() {
-        return departmentDao.findByName(DEFAULT_DEP);
+        Department defaultDep = this.findByName(DEFAULT_DEP);
+        if (defaultDep != null) {
+            return defaultDep;
+        }
+        Department department = new Department(DEFAULT_DEP);
+        Team team = new Team();
+        team.setName(DEFAULT_DEP);
+        team.setDepartment(department);
+        teamService.saveTeam(team);
+        this.saveDepartment(department);
+        return department;
+
     }
 }
