@@ -1,8 +1,10 @@
 package com.OfficeManager.app.security;
 
 import com.OfficeManager.app.entities.User;
+import com.OfficeManager.app.services.impl.UserServiceImpl;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,9 +31,11 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
+    private UserServiceImpl userService;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, UserServiceImpl userService) {
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @Override
@@ -58,8 +62,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 
+        String loggedInUserUsername = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
+        User loggedInUser = userService.findByUsername(loggedInUserUsername);
+        String loggedInUserRole = loggedInUser.getRole();
         String token = JWT.create()
-                .withSubject(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername())
+                .withSubject(loggedInUserUsername)
+                .withClaim("role", loggedInUserRole)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
