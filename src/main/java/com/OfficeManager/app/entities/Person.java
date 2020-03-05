@@ -15,7 +15,6 @@ public class Person {
     private LocalDate startDateContract, endDateContract;
     private Status status;
     private Team team;
-    private Department department;
 
     Set<OfficeAssignment> assignments = new HashSet<OfficeAssignment>();
 
@@ -23,7 +22,7 @@ public class Person {
 
     }
 
-    public Person(String firstName, String lastName, String email, Boolean isManager, LocalDate startDateContract, LocalDate endDateContract, Status status, Team team, Department department) {
+    public Person(String firstName, String lastName, String email, Boolean isManager, LocalDate startDateContract, LocalDate endDateContract, Status status, Team team) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -32,7 +31,6 @@ public class Person {
         this.endDateContract = endDateContract;
         this.status = status;
         this.team = team;
-        this.department = department;
     }
 
     @Id
@@ -127,12 +125,11 @@ public class Person {
         this.team = team;
     }
 
-    @ManyToOne(optional = false)
+    @Transient
     public Department getDepartment() {
-        return department;
+        if(team == null)
+            return null;
+        return team.getDepartment();
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
 }
