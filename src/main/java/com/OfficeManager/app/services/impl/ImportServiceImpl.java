@@ -60,6 +60,9 @@ public class ImportServiceImpl implements IImportService {
     @Autowired
     IOfficeAssignmentDao officeAssignmentDao;
 
+    @Autowired
+    ITeamDao teamDao;
+
 
     private java.sql.Date convertExcelToDate(double date) {
         return new Date((long) ((date - nbJoursBetween1900_1970) * 24 * 60 * 60 * 1000));
@@ -67,7 +70,6 @@ public class ImportServiceImpl implements IImportService {
 
     @Override
     public MessageDto importBureau(MultipartFile loriatab) throws IOException {
-        String path = "tata.xlsx";
         String batiment, bureau;
         int etage, ligneActuelle = 0, nbLigneDejaPresente = 0, nbLigneAdd = 0;
         double capacite;
@@ -79,9 +81,8 @@ public class ImportServiceImpl implements IImportService {
             officesName.add(o[0]+o[1]+o[2]);
         }
 
-        String[] tab = path.split("\\.");
-        String extension = tab.length >= 2 ? tab[tab.length-1] : "fichier sans extension";
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
+        String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
         file.deleteOnExit();
         loriatab.transferTo(file);
         FileInputStream fichier = new FileInputStream(file);
@@ -139,8 +140,6 @@ public class ImportServiceImpl implements IImportService {
             personDao.deleteAll();
         }
 
-        File file2 = new File("ListeAffectation.xlsx");
-        System.out.println("Test fichier :"+file2.getName());
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
         file.deleteOnExit();
         loriatab.transferTo(file);
@@ -150,7 +149,7 @@ public class ImportServiceImpl implements IImportService {
     }
 
     @Scheduled(cron="0 0 2 * * ?")
-    private MessageDto parsingImport() throws IOException {
+    protected MessageDto importScheduled() throws IOException {
         officeAssignmentDao.deleteAll();
         personDao.deleteAll();
 
@@ -174,7 +173,6 @@ public class ImportServiceImpl implements IImportService {
         Sheet sheet;
 
         String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
-        System.out.println("Extension : "+extension);
         FileInputStream fichier = new FileInputStream(file);
 
         switch (extension) {
@@ -210,47 +208,31 @@ public class ImportServiceImpl implements IImportService {
             labo = ligne.getCell(LAB).getStringCellValue();
             departement = ligne.getCell(DEP).getStringCellValue();
 
+            nom = nom.substring(0, 1).toUpperCase() + nom.substring(1);
+            prenom = prenom.substring(0, 1).toUpperCase() + prenom.substring(1);
+
             Person person;
             String building, num;
             int floor;
 
-            //Ici la personne n'xiste pas dans la BDD
-            if (!emails.contains(email)) {
-                person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), null);
-                personDao.save(person);
-                emails.add(email);
-                nbPersonneAjoute++;
-                if(bureau != null && bureauCorrect(bureau.toUpperCase())){
-                    building = bureau.charAt(0)+"";
-                    floor = Integer.parseInt(bureau.charAt(1)+"");
-                    num = bureau.substring(2);
-                    Office o = officeDao.getByName(num, floor, building);
-                    if (o != null)
-                        officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, o));
-                    else
-                        //log += affectation pas ajouté car bureau machin existe pas
-                        nbAffectationAjoute++;
-                }
-                //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
-            } else {
-                person = personDao.getByEmail(email);
-                nbPersonneDejaLa++;
-                OfficeAssignment assignment = getCurrentAssignment(person.getId());
-                //Si le mec avait déjà un bureau d'affecté actuellement
-                if(assignment != null){
-                    Office office = assignment.getOffice();
-                    //Si le bureau du excel est bien formé si il existe
-                    if(bureau != null && bureauCorrect(bureau.toUpperCase())) {
-                        building = bureau.charAt(0) + "";
-                        floor = Integer.parseInt(bureau.charAt(1) + "");
-                        num = bureau.substring(2);
-                        //Si le bureau est différent de celui courrament affecté à la personne courante
-                        if (!building.equals(office.getBuilding()) || !num.equals(office.getNum()) || floor != office.getFloor()){
-                            assignment.setEndDate(LocalDate.now());
-                            officeAssignmentDao.save(assignment);
-                            officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, officeDao.getByName(num, floor, building)));
-                            nbPersonneUpdate++;
-                        }
+            if (labo.toUpperCase().equals("LORIA")){
+                //Ici la personne n'existe pas dans la BDD
+                if (!emails.contains(email)) {
+                    person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), teamDao.findByName("Loria").get());
+                    personDao.save(person);
+                    emails.add(email);
+                    nbPersonneAjoute++;
+                    nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
+                    //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
+                } else {
+                    person = personDao.getByEmail(email);
+                    nbPersonneDejaLa++;
+                    OfficeAssignment assignment = getCurrentAssignment(person.getId());
+                    //Si le mec avait déjà un bureau d'affecté actuellement
+                    if(assignment != null){
+                        nbPersonneUpdate = updateAffectation(nbPersonneUpdate, bureau, person, assignment);
+                    } else {
+                        nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
                     }
                 }
             }
@@ -260,6 +242,46 @@ public class ImportServiceImpl implements IImportService {
         mes.setType("importAffectation");
         mes.setMessage("Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +", nb affectation ajoutés : "+nbAffectationAjoute);
         return mes;
+    }
+
+    private int ajoutAffectation(int nbAffectationAjoute, String bureau, Person person) {
+        String building;
+        int floor;
+        String num;//Si il a un bureau correct, on l'affecte
+        if(bureau != null && bureauCorrect(bureau.toUpperCase())){
+            building = bureau.charAt(0)+"";
+            floor = Integer.parseInt(bureau.charAt(1)+"");
+            num = bureau.substring(2);
+            Office o = officeDao.getByName(num, floor, building);
+            if (o != null) {
+                officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, o));
+                nbAffectationAjoute++;
+            } else {
+                //log += affectation pas ajouté car bureau machin existe pas
+            }
+        }
+        return nbAffectationAjoute;
+    }
+
+    private int updateAffectation(int nbPersonneUpdate, String bureau, Person person, OfficeAssignment assignment) {
+        String building;
+        int floor;
+        String num;
+        Office office = assignment.getOffice();
+        //Si le bureau du excel est bien formé si il existe
+        if(bureau != null && bureauCorrect(bureau.toUpperCase())) {
+            building = bureau.charAt(0) + "";
+            floor = Integer.parseInt(bureau.charAt(1) + "");
+            num = bureau.substring(2);
+            //Si le bureau est différent de celui courrament affecté à la personne courante
+            if (!building.equals(office.getBuilding()) || !num.equals(office.getNum()) || floor != office.getFloor()){
+                assignment.setEndDate(LocalDate.now());
+                officeAssignmentDao.save(assignment);
+                officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, officeDao.getByName(num, floor, building)));
+                nbPersonneUpdate++;
+            }
+        }
+        return nbPersonneUpdate;
     }
 
     private boolean bureauCorrect(String bureau) {
