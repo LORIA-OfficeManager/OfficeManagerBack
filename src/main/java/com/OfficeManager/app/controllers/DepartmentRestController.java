@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -91,9 +92,18 @@ public class DepartmentRestController {
 
     @DeleteMapping("{id}")
     ResponseEntity<DepartmentDto> deleteDepartment(@PathVariable int id){
-        if (departmentService.findById(id).isPresent()){
-            departmentService.swtichTeamToDefaultDepartment(id);
+        Optional<Department> optDep = departmentService.findById(id);
+        if (optDep.isPresent()){
+            Department department = optDep.get();
+            Set<Team> teams = department.getTeams();
+
+            Department defaultDep = departmentService.getDefault();
+            teams.forEach(team -> {
+                teamService.switchPersonTODefaultTeam(defaultDep.getId(), team.getId());
+            });
+            System.out.println(id);
             departmentService.deleteById(id);
+
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

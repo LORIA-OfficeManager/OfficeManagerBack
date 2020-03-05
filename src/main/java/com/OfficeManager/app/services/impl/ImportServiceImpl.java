@@ -201,7 +201,7 @@ public class ImportServiceImpl implements IImportService {
 
             //Ici la personne n'xiste pas dans la BDD
             if (!emails.contains(email)) {
-                person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), null, departmentDao.findById(0).get());
+                person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), null);
                 personDao.save(person);
                 emails.add(email);
                 nbPersonneAjoute++;

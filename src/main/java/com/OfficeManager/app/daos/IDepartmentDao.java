@@ -13,12 +13,6 @@ public interface IDepartmentDao extends JpaRepository<Department, Integer> {
             nativeQuery = true)
     Department findByName(String name);
 
-    @Modifying
-    @Query(
-            value = "UPDATE Team t SET department = (SELECT d FROM Department d WHERE d.name = :default) WHERE t.department.id = :id"
-    )
-    void switcTeamToDefaultDepartment(@Param("id") int id, @Param("default") String defaultDep);
-
     @Query(
             value = "SELECT (count(d) > 0) FROM Department d WHERE d.name = :name"
     )
