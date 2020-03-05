@@ -13,10 +13,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import sun.plugin2.message.Message;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -134,32 +134,49 @@ public class ImportServiceImpl implements IImportService {
 
     @Override
     public MessageDto importAffectation(MultipartFile loriatab, boolean wipe) throws IOException {
-        String path = "tata2.xlsx";
-        int ligneActuelle = 0;
-        int nbPersonneDejaLa = 0;
-        int nbPersonneAjoute = 0;
-        int nbPersonneUpdate = 0;
-        int nbAffectationAjoute = 0;
-
         if(wipe){
             officeAssignmentDao.deleteAll();
             personDao.deleteAll();
         }
 
-        String nom, prenom, email, statut, bureau, labo, departement;
-        java.sql.Date debut, fin;
-        List<String> emails = personDao.fetchAllEmail();
-
-        String[] tab = path.split("\\.");
-        String extension = tab.length >= 2 ? tab[tab.length - 1] : "fichier sans extension";
+        File file2 = new File("ListeAffectation.xlsx");
+        System.out.println("Test fichier :"+file2.getName());
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
         file.deleteOnExit();
         loriatab.transferTo(file);
-        FileInputStream fichier = new FileInputStream(file);
 
-        //créer une instance workbook qui fait référence au fichier xlsx
+        return parsingImport(file);
+
+    }
+
+    @Scheduled(cron="0 0 2 * * ?")
+    private MessageDto parsingImport() throws IOException {
+        officeAssignmentDao.deleteAll();
+        personDao.deleteAll();
+
+        File file = new File("ListeAffectation.xlsx");
+        file.deleteOnExit();
+
+
+        return parsingImport(file);
+    }
+
+    private MessageDto parsingImport(File file) throws IOException {
+        int ligneActuelle;
+        int nbPersonneDejaLa = 0;
+        int nbPersonneAjoute = 0;
+        int nbPersonneUpdate = 0;
+        int nbAffectationAjoute = 0;
+        String nom, prenom, email, statut, bureau, labo, departement;
+        java.sql.Date debut, fin;
+        List<String> emails = personDao.fetchAllEmail();
         Workbook wb;
         Sheet sheet;
+
+        String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
+        System.out.println("Extension : "+extension);
+        FileInputStream fichier = new FileInputStream(file);
+
         switch (extension) {
             case "xlsx":
                 wb = new XSSFWorkbook(fichier);
@@ -174,8 +191,6 @@ public class ImportServiceImpl implements IImportService {
                 break;
         }
         sheet = wb.getSheetAt(0);
-
-        //FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
 
         for (ligneActuelle = LIGNE_START_AFFECTATION; ligneActuelle <= sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
             Row ligne = sheet.getRow(ligneActuelle);
@@ -214,9 +229,9 @@ public class ImportServiceImpl implements IImportService {
                         officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, o));
                     else
                         //log += affectation pas ajouté car bureau machin existe pas
-                    nbAffectationAjoute++;
+                        nbAffectationAjoute++;
                 }
-            //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
+                //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
             } else {
                 person = personDao.getByEmail(email);
                 nbPersonneDejaLa++;
