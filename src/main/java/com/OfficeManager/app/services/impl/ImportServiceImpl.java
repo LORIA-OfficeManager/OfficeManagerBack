@@ -195,27 +195,33 @@ public class ImportServiceImpl implements IImportService {
             labo = ligne.getCell(LAB).getStringCellValue();
             departement = ligne.getCell(DEP).getStringCellValue();
 
+            nom = nom.substring(0, 1).toUpperCase() + nom.substring(1);
+            prenom = prenom.substring(0, 1).toUpperCase() + prenom.substring(1);
+
             Person person;
             String building, num;
             int floor;
 
-            //Ici la personne n'existe pas dans la BDD
-            if (!emails.contains(email)) {
-                person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), teamDao.findByName("Loria").get());
-                personDao.save(person);
-                emails.add(email);
-                nbPersonneAjoute++;
-                nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
-                //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
-            } else {
-                person = personDao.getByEmail(email);
-                nbPersonneDejaLa++;
-                OfficeAssignment assignment = getCurrentAssignment(person.getId());
-                //Si le mec avait déjà un bureau d'affecté actuellement
-                if(assignment != null){
-                    nbPersonneUpdate = updateAffectation(nbPersonneUpdate, bureau, person, assignment);
-                } else {
+            System.out.println(labo);
+            if (labo.toUpperCase().equals("LORIA")){
+                //Ici la personne n'existe pas dans la BDD
+                if (!emails.contains(email)) {
+                    person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), teamDao.findByName("Loria").get());
+                    personDao.save(person);
+                    emails.add(email);
+                    nbPersonneAjoute++;
                     nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
+                    //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
+                } else {
+                    person = personDao.getByEmail(email);
+                    nbPersonneDejaLa++;
+                    OfficeAssignment assignment = getCurrentAssignment(person.getId());
+                    //Si le mec avait déjà un bureau d'affecté actuellement
+                    if(assignment != null){
+                        nbPersonneUpdate = updateAffectation(nbPersonneUpdate, bureau, person, assignment);
+                    } else {
+                        nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
+                    }
                 }
             }
         }
