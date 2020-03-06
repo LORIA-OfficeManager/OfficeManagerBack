@@ -239,6 +239,10 @@ public class ImportServiceImpl implements IImportService {
                     }
                     team = !team.isPresent() ? teamDao.findByName("Loria") : team;
 
+                    if (fin.toLocalDate().toEpochDay() < debut.toLocalDate().toEpochDay()){
+                        log.write(ligneActuelle+1+" : "+prenom + " " + nom + " a une date de fin de contrat antérieur à la date de début, il a été ajouté quand même.\n");
+                    }
+
                     person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), stat, team.get());
                     personDao.save(person);
                     emails.add(email);
