@@ -190,9 +190,8 @@ public class ImportServiceImpl implements IImportService {
         }
         sheet = wb.getSheetAt(0);
 
-        for (ligneActuelle = LIGNE_START_AFFECTATION; ligneActuelle <= sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
+        for (ligneActuelle = LIGNE_START_AFFECTATION; ligneActuelle < sheet.getLastRowNum(); ligneActuelle++) {//parcourir les lignes
             Row ligne = sheet.getRow(ligneActuelle);
-
             bureau = ligne.getCell(OFFICE).getStringCellValue();
             nom = ligne.getCell(NAME).getStringCellValue().toLowerCase();
             prenom = ligne.getCell(FIRSTNAME).getStringCellValue().toLowerCase();
@@ -204,9 +203,9 @@ public class ImportServiceImpl implements IImportService {
             }
             debut = convertExcelToDate(ligne.getCell(START).getNumericCellValue());
             fin = convertExcelToDate(ligne.getCell(END).getNumericCellValue());
-            statut = ligne.getCell(RANK).getStringCellValue();
+//            statut = ligne.getCell(RANK).getStringCellValue();
             labo = ligne.getCell(LAB).getStringCellValue();
-            departement = ligne.getCell(DEP).getStringCellValue();
+            //departement = ligne.getCell(DEP).getStringCellValue();
 
             nom = nom.substring(0, 1).toUpperCase() + nom.substring(1);
             prenom = prenom.substring(0, 1).toUpperCase() + prenom.substring(1);
