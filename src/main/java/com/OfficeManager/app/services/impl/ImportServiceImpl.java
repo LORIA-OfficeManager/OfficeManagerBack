@@ -279,6 +279,11 @@ public class ImportServiceImpl implements IImportService {
                 officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, officeDao.getByName(num, floor, building)));
                 nbPersonneUpdate++;
             }
+            //si son bureau est supprimé cela veut dire qu'il a juste été desafecté
+        } else if (bureau == null){
+            assignment.setEndDate(LocalDate.now());
+            officeAssignmentDao.save(assignment);
+            nbPersonneUpdate++;
         }
         return nbPersonneUpdate;
     }
