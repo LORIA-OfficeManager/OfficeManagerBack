@@ -2,9 +2,7 @@ package com.OfficeManager.app.services.impl;
 
 import com.OfficeManager.app.daos.*;
 import com.OfficeManager.app.dtos.MessageDto;
-import com.OfficeManager.app.entities.Office;
-import com.OfficeManager.app.entities.OfficeAssignment;
-import com.OfficeManager.app.entities.Person;
+import com.OfficeManager.app.entities.*;
 import com.OfficeManager.app.services.interfaces.IImportService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,13 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service("importService")
 @Transactional
@@ -43,7 +41,8 @@ public class ImportServiceImpl implements IImportService {
     private static final int LIGNE_START_BUREAU = 4;
     private static final int LIGNE_START_AFFECTATION = 2;
 
-    private String log;
+    private FileWriter log;
+    private String fileName;
 
     @Autowired
     IOfficeDao officeDao;
@@ -125,7 +124,6 @@ public class ImportServiceImpl implements IImportService {
             }
         }
         fichier.close();
-        log = "Nb ligne ajoutés : "+nbLigneAdd+", nb lignes déjà là : "+nbLigneDejaPresente;
 
         MessageDto mes = new MessageDto();
         mes.setType("importBureau");
@@ -144,7 +142,7 @@ public class ImportServiceImpl implements IImportService {
         file.deleteOnExit();
         loriatab.transferTo(file);
 
-        return parsingImport(file);
+        return parsingImport(file, false);
 
     }
 
@@ -157,10 +155,10 @@ public class ImportServiceImpl implements IImportService {
         file.deleteOnExit();
 
 
-        return parsingImport(file);
+        return parsingImport(file, false);
     }
 
-    private MessageDto parsingImport(File file) throws IOException {
+    private MessageDto parsingImport(File file, boolean fullLog) throws IOException {
         int ligneActuelle;
         int nbPersonneDejaLa = 0;
         int nbPersonneAjoute = 0;
@@ -174,6 +172,17 @@ public class ImportServiceImpl implements IImportService {
 
         String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
         FileInputStream fichier = new FileInputStream(file);
+
+        try {
+            String date = LocalDateTime.now().toString();
+            date = date.substring(0,date.length()-4).replace(':','-');
+            fileName = "log/"+date+"log.txt";
+            log = new FileWriter(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        log.write("Import affection commence ("+LocalDate.now()+") :\n");
 
         switch (extension) {
             case "xlsx":
@@ -203,9 +212,9 @@ public class ImportServiceImpl implements IImportService {
             }
             debut = convertExcelToDate(ligne.getCell(START).getNumericCellValue());
             fin = convertExcelToDate(ligne.getCell(END).getNumericCellValue());
-//            statut = ligne.getCell(RANK).getStringCellValue();
+            statut = ligne.getCell(RANK).getStringCellValue();
             labo = ligne.getCell(LAB).getStringCellValue();
-            //departement = ligne.getCell(DEP).getStringCellValue();
+            departement = ligne.getCell(DEP)==null?null:ligne.getCell(DEP).getStringCellValue();
 
             nom = nom.substring(0, 1).toUpperCase() + nom.substring(1);
             prenom = prenom.substring(0, 1).toUpperCase() + prenom.substring(1);
@@ -217,11 +226,24 @@ public class ImportServiceImpl implements IImportService {
             if (labo.toUpperCase().equals("LORIA")){
                 //Ici la personne n'existe pas dans la BDD
                 if (!emails.contains(email)) {
-                    person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), statusDao.findById(0).get(), teamDao.findByName("Loria").get());
+
+                    Status stat = statusDao.findByName(statut);
+                    if (stat == null && statut != null){
+                        log.write(ligneActuelle+1+" : "+prenom + " " + nom + " a été affecté au statut par défaut car son statut ne correspond à aucun dans la liste des status de la base de données.\n");
+                    }
+                    stat = stat == null ? statusDao.findById(0).get() : stat;
+
+                    Optional<Team> team = teamDao.findByName(departement);
+                    if (!team.isPresent() && departement != null){
+                        log.write(ligneActuelle+1+" : "+prenom + " " + nom + " a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.\n");
+                    }
+                    team = !team.isPresent() ? teamDao.findByName("Loria") : team;
+
+                    person = new Person(prenom, nom, email, false, debut.toLocalDate(), fin.toLocalDate(), stat, team.get());
                     personDao.save(person);
                     emails.add(email);
                     nbPersonneAjoute++;
-                    nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
+                    nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person,ligneActuelle,fullLog);
                     //Ici la personne existe déjà dans la BDD, qu'elle est une affectation ou pas
                 } else {
                     person = personDao.getByEmail(email);
@@ -229,21 +251,29 @@ public class ImportServiceImpl implements IImportService {
                     OfficeAssignment assignment = getCurrentAssignment(person.getId());
                     //Si le mec avait déjà un bureau d'affecté actuellement
                     if(assignment != null){
-                        nbPersonneUpdate = updateAffectation(nbPersonneUpdate, bureau, person, assignment);
+                        nbPersonneUpdate = updateAffectation(nbPersonneUpdate, bureau, person, assignment,ligneActuelle);
                     } else {
-                        nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person);
+                        nbAffectationAjoute = ajoutAffectation(nbAffectationAjoute, bureau, person, ligneActuelle,fullLog);
                     }
                 }
             }
         }
         fichier.close();
+        log.close();
         MessageDto mes = new MessageDto();
         mes.setType("importAffectation");
-        mes.setMessage("Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +", nb affectation ajoutés : "+nbAffectationAjoute);
+        StringBuilder message = new StringBuilder();
+        message.append("Nb ligne ajoutés : "+nbPersonneAjoute+", nb lignes déjà là : "+nbPersonneDejaLa+", nb lignes update : "+ nbPersonneUpdate +", nb affectation ajoutés : "+nbAffectationAjoute+"\n");
+        BufferedReader  bufferedReader = new BufferedReader(new FileReader(fileName));
+        String ligne;
+        while ((ligne = bufferedReader.readLine()) != null){
+            message.append(ligne+"\n");
+        }
+        mes.setMessage(message.toString());
         return mes;
     }
 
-    private int ajoutAffectation(int nbAffectationAjoute, String bureau, Person person) {
+    private int ajoutAffectation(int nbAffectationAjoute, String bureau, Person person, int ligneCourante, boolean fulllog) throws IOException {
         String building;
         int floor;
         String num;//Si il a un bureau correct, on l'affecte
@@ -253,16 +283,21 @@ public class ImportServiceImpl implements IImportService {
             num = bureau.substring(2);
             Office o = officeDao.getByName(num, floor, building);
             if (o != null) {
-                officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, o));
+                officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), LocalDate.parse("2099-12-31"), person, o));
+                if (fulllog){
+                    log.write(ligneCourante+1+" : "+person.getFirstName() + " " + person.getLastName() + " à été affecté avec succès.\n");
+                }
                 nbAffectationAjoute++;
             } else {
-                //log += affectation pas ajouté car bureau machin existe pas
+                log.write(ligneCourante+1+" : "+person.getFirstName() + " " + person.getLastName() + " n'a pas été affecté à un bureau car le bureau n'est pas enregistré dans la base de données.\n");
             }
+        } else if (bureau != null && !bureauCorrect(bureau.toUpperCase())){
+            log.write(ligneCourante+1+" : "+person.getFirstName() + " " + person.getLastName() + " n'a pas été affecté à un bureau car le bureau ne respecte pas le schema suivant A000.\n");
         }
         return nbAffectationAjoute;
     }
 
-    private int updateAffectation(int nbPersonneUpdate, String bureau, Person person, OfficeAssignment assignment) {
+    private int updateAffectation(int nbPersonneUpdate, String bureau, Person person, OfficeAssignment assignment, int ligneCourante) {
         String building;
         int floor;
         String num;
@@ -276,10 +311,10 @@ public class ImportServiceImpl implements IImportService {
             if (!building.equals(office.getBuilding()) || !num.equals(office.getNum()) || floor != office.getFloor()){
                 assignment.setEndDate(LocalDate.now());
                 officeAssignmentDao.save(assignment);
-                officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), person.getEndDateContract(), person, officeDao.getByName(num, floor, building)));
+                officeAssignmentDao.save(new OfficeAssignment(LocalDate.now(), LocalDate.parse("2099-12-31"), person, officeDao.getByName(num, floor, building)));
                 nbPersonneUpdate++;
             }
-            //si son bureau est supprimé cela veut dire qu'il a juste été desafecté
+            //si son bureau n'est plus sur dans le excel cela veut dire qu'il a juste été desafecté
         } else if (bureau == null){
             assignment.setEndDate(LocalDate.now());
             officeAssignmentDao.save(assignment);
