@@ -59,4 +59,11 @@ public class AssignmentRestController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
+    @GetMapping(value= "export", produces="text/csv")
+    ResponseEntity<String> exportAssignment(){
+        officeAssignmentService.exportOfficeAssignment();
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+
 }

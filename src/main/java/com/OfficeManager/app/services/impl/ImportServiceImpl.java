@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,7 +70,6 @@ public class ImportServiceImpl implements IImportService {
 
     @Override
     public MessageDto importBureau(MultipartFile loriatab) throws IOException {
-        String path = "tata.xlsx";
         String batiment, bureau;
         int etage, ligneActuelle = 0, nbLigneDejaPresente = 0, nbLigneAdd = 0;
         double capacite;
@@ -81,9 +81,8 @@ public class ImportServiceImpl implements IImportService {
             officesName.add(o[0]+o[1]+o[2]);
         }
 
-        String[] tab = path.split("\\.");
-        String extension = tab.length >= 2 ? tab[tab.length-1] : "fichier sans extension";
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
+        String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
         file.deleteOnExit();
         loriatab.transferTo(file);
         FileInputStream fichier = new FileInputStream(file);
@@ -136,32 +135,46 @@ public class ImportServiceImpl implements IImportService {
 
     @Override
     public MessageDto importAffectation(MultipartFile loriatab, boolean wipe) throws IOException {
-        String path = "tata2.xlsx";
-        int ligneActuelle = 0;
-        int nbPersonneDejaLa = 0;
-        int nbPersonneAjoute = 0;
-        int nbPersonneUpdate = 0;
-        int nbAffectationAjoute = 0;
-
         if(wipe){
             officeAssignmentDao.deleteAll();
             personDao.deleteAll();
         }
 
-        String nom, prenom, email, statut, bureau, labo, departement;
-        java.sql.Date debut, fin;
-        List<String> emails = personDao.fetchAllEmail();
-
-        String[] tab = path.split("\\.");
-        String extension = tab.length >= 2 ? tab[tab.length - 1] : "fichier sans extension";
         File file = new File(System.getProperty("java.io.tmpdir")+"/"+loriatab.getOriginalFilename());
         file.deleteOnExit();
         loriatab.transferTo(file);
-        FileInputStream fichier = new FileInputStream(file);
 
-        //créer une instance workbook qui fait référence au fichier xlsx
+        return parsingImport(file);
+
+    }
+
+    @Scheduled(cron="0 0 2 * * ?")
+    protected MessageDto importScheduled() throws IOException {
+        officeAssignmentDao.deleteAll();
+        personDao.deleteAll();
+
+        File file = new File("ListeAffectation.xlsx");
+        file.deleteOnExit();
+
+
+        return parsingImport(file);
+    }
+
+    private MessageDto parsingImport(File file) throws IOException {
+        int ligneActuelle;
+        int nbPersonneDejaLa = 0;
+        int nbPersonneAjoute = 0;
+        int nbPersonneUpdate = 0;
+        int nbAffectationAjoute = 0;
+        String nom, prenom, email, statut, bureau, labo, departement;
+        java.sql.Date debut, fin;
+        List<String> emails = personDao.fetchAllEmail();
         Workbook wb;
         Sheet sheet;
+
+        String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
+        FileInputStream fichier = new FileInputStream(file);
+
         switch (extension) {
             case "xlsx":
                 wb = new XSSFWorkbook(fichier);
@@ -202,7 +215,6 @@ public class ImportServiceImpl implements IImportService {
             String building, num;
             int floor;
 
-            System.out.println(labo);
             if (labo.toUpperCase().equals("LORIA")){
                 //Ici la personne n'existe pas dans la BDD
                 if (!emails.contains(email)) {
