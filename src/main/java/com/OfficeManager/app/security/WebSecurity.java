@@ -33,6 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .logout()
+                .permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), userService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
