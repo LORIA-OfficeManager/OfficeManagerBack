@@ -9,6 +9,7 @@ public class SecurityConstants {
     public static final String SIGN_UP_URL = "/users/signUp";
     public static final String[] AUTH = {
             "/users/signUp",
+            "/logout",
             "/people",
             "/swagger-resources/**",
             "/swagger-ui.html**",
