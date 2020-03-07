@@ -38,3 +38,10 @@ INSERT INTO `team` (`team_id`, `name`, `department_department_id`) VALUES
 (23809, 'Pythagore', 23805),
 (23810, 'Thales', 23805);
 
+--
+-- Dumping data for table `user` password OFF|c3m@n@g3r
+--
+
+INSERT INTO `user` (`user_id`, `password`, `role`, `username`) VALUES
+(33382, '$2a$10$h51di.r0c68xsQTEOYMGye4jZl.sbKzzrr7lCN6ob6xDo2AZmAAsm', 'admin', 'officemanager.admin@loria.fr')
+
