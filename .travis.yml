@@ -17,7 +17,7 @@ before_deploy:
 install:
 - mkdir db_officeManager
 - chmod 777 -R db_officeManager
-- docker-compose -f docker-compose.travis.yml up -d --build
+- docker-compose -f docker-compose.yml up -d --build
 deploy:
   provider: script
   skip_cleanup: true
