@@ -1,6 +1,9 @@
 package com.OfficeManager.app.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "TEAM")
@@ -9,9 +12,12 @@ public class Team {
     private Integer id;
     private String name;
     private Department department;
+    private Set<Person> people = new HashSet<Person>();
 
-    public Team(){
+    public Team(){}
 
+    public Team(String name){
+        this.name = name;
     }
 
     public Team(Integer id, String name, Department department) {
@@ -40,12 +46,19 @@ public class Team {
         this.name = name;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     public Department getDepartment() {
         return department;
     }
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    public Set<Person> getPeople() { return this.people; }
+
+    public void setPeople(Set<Person> people) {
+        this.people = people;
     }
 }

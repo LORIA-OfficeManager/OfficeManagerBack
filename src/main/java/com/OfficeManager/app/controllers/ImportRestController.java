@@ -1,5 +1,6 @@
 package com.OfficeManager.app.controllers;
 
+import com.OfficeManager.app.dtos.MessageDto;
 import com.OfficeManager.app.entities.*;
 import com.OfficeManager.app.services.impl.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -34,15 +35,15 @@ public class ImportRestController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/office", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> importOffice(@RequestParam(value = "file") MultipartFile file) throws IOException {
+    public ResponseEntity<MessageDto> importOffice(@RequestParam(value = "file") MultipartFile file) throws IOException {
         //System.out.println(file.getOriginalFilename());
-        return new ResponseEntity<String>(importService.importBureau(file), HttpStatus.OK);
+        return new ResponseEntity<MessageDto>(importService.importBureau(file), HttpStatus.OK);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> importPerson(@RequestParam(value = "file") MultipartFile file, boolean wipe) throws IOException {
+    public ResponseEntity<MessageDto> importPerson(@RequestParam(value = "file") MultipartFile file, @RequestParam(value = "wipe") Boolean wipe) throws IOException {
         //System.out.println(file.getOriginalFilename());
-        return new ResponseEntity<String>(importService.importAffectation(file, wipe), HttpStatus.OK);
+        return new ResponseEntity<MessageDto>(importService.importAffectation(file, wipe), HttpStatus.OK);
     }
 }

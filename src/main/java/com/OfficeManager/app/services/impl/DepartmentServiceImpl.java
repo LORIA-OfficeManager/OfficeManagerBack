@@ -1,7 +1,9 @@
 package com.OfficeManager.app.services.impl;
 
 import com.OfficeManager.app.daos.IDepartmentDao;
+import com.OfficeManager.app.daos.ITeamDao;
 import com.OfficeManager.app.entities.Department;
+import com.OfficeManager.app.entities.Team;
 import com.OfficeManager.app.services.interfaces.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,13 @@ import java.util.Optional;
 @Transactional
 public class DepartmentServiceImpl implements IDepartmentService {
 
+    public final static String DEFAULT_DEP = "Loria";
+
     @Autowired
     private IDepartmentDao departmentDao;
+
+    @Autowired
+    TeamServiceImpl teamService;
 
     @Override
     public List<Department> fetchAll() {
@@ -37,7 +44,29 @@ public class DepartmentServiceImpl implements IDepartmentService {
         return departmentDao.save(department);
     }
 
+    @Override
     public void deleteById(Integer id){
         departmentDao.deleteById(id);
+    }
+
+    @Override
+    public boolean isAuthorisedName(String name) {
+        return !departmentDao.existsByName(name) && !name.equals(DEFAULT_DEP);
+    }
+
+    @Override
+    public Department getDefault() {
+        Department defaultDep = this.findByName(DEFAULT_DEP);
+        if (defaultDep != null) {
+            return defaultDep;
+        }
+        Department department = new Department(DEFAULT_DEP);
+        Team team = new Team();
+        team.setName(DEFAULT_DEP);
+        team.setDepartment(department);
+        teamService.saveTeam(team);
+        this.saveDepartment(department);
+        return department;
+
     }
 }
