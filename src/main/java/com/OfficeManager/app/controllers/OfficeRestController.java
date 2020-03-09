@@ -3,17 +3,20 @@ package com.OfficeManager.app.controllers;
 
 import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
+import com.OfficeManager.app.entities.Person;
 import com.OfficeManager.app.services.impl.OfficeAssignmentServiceImpl;
 import com.OfficeManager.app.services.impl.OfficeServiceImpl;
 import com.OfficeManager.app.services.impl.StatusServiceImpl;
 import com.OfficeManager.app.dtos.OfficeAssignmentDto;
 import com.OfficeManager.app.dtos.OfficesDto;
 import com.OfficeManager.app.dtos.SingleOfficeDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,48 @@ public class OfficeRestController {
         List<Boolean> hasStrangers = new ArrayList<Boolean>();
         for(Office office: offices){
             hasStrangers.add(officeAssignmentService.hasStrangerByOfficeId(office.getId()));
+        }
+        List<OfficesDto> officesDTO = mapOfficesDtosFromOffices(offices, occupations, hasStrangers);
+        return new ResponseEntity<List<OfficesDto>>(officesDTO, HttpStatus.OK);
+    }
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadFile() throws Exception {
+        List<Office> offices = officeService.fetchAll();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(offices);
+        byte[] isr = json.getBytes();
+        String fileName = "employees.json";
+        HttpHeaders respHeaders = new HttpHeaders();
+        respHeaders.setContentLength(isr.length);
+        respHeaders.setContentType(new MediaType("text", "json"));
+        respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+        return new ResponseEntity<byte[]>(isr, respHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("date/{timestamp}")
+    public ResponseEntity<List<OfficesDto>> getOffices(@PathVariable long timestamp){
+        List<Office> offices = officeService.fetchAll();
+        //Liste des occupations par bureau
+        List<Double> occupations = new ArrayList<Double>();
+        List<Boolean> hasStrangers = new ArrayList<Boolean>();
+        for(Office office: offices) {
+            Double occupation = 0.0;
+            boolean strangers =false;
+            List<OfficeAssignment> officeAssignments = officeAssignmentService.findByOfficeID(office.getId(), true);
+            for(OfficeAssignment oa : officeAssignments) {
+                if (timestamp > oa.getStartDate().toEpochDay()*24*60*60*1000 &&
+                   timestamp < oa.getEndDate().toEpochDay()*24*60*60*1000){
+                   occupation += oa.getPerson().getStatus().getSize();
+                 }
+                Person p = oa.getPerson();
+                if ( (timestamp < p.getStartDateContract().toEpochDay()*24*60*60*1000) ||
+                        (timestamp > p.getEndDateContract().toEpochDay()*24*60*60*1000) ){
+                    strangers = true;
+                }
+            }
+            occupations.add(occupation);
+            hasStrangers.add(strangers);
         }
         List<OfficesDto> officesDTO = mapOfficesDtosFromOffices(offices, occupations, hasStrangers);
         return new ResponseEntity<List<OfficesDto>>(officesDTO, HttpStatus.OK);

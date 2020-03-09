@@ -18,4 +18,6 @@ public interface IOfficeAssignmentService {
     public List<Integer> findAllStatusByOfficeId(int id);
 
     public Boolean hasStrangerByOfficeId(int id);
+
+    public void exportOfficeAssignment();
 }

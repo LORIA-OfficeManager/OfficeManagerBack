@@ -4,8 +4,7 @@ import com.OfficeManager.app.entities.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 public interface IDepartmentDao extends JpaRepository<Department, Integer> {
 
@@ -13,5 +12,10 @@ public interface IDepartmentDao extends JpaRepository<Department, Integer> {
             value = "SELECT * FROM department d WHERE d.name = :name",
             nativeQuery = true)
     Department findByName(String name);
+
+    @Query(
+            value = "SELECT (count(d) > 0) FROM Department d WHERE d.name = :name"
+    )
+    boolean existsByName(String name);
 
 }
