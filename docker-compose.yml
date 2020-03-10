@@ -49,6 +49,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - '${PWD}:/usr/local/lib/'
     ports:
       - '51000:51000'
     networks:

@@ -30,6 +30,8 @@
 /db/
 /db_officeManager
 
+/log
+/log/
 
 *.ibt
 
