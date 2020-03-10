@@ -2,7 +2,6 @@ package com.OfficeManager.app.services.interfaces;
 
 import com.OfficeManager.app.entities.OfficeAssignment;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 public interface IOfficeAssignmentService {

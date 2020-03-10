@@ -1,7 +1,7 @@
 package com.OfficeManager.app.security;
 
 import com.OfficeManager.app.services.impl.UserServiceImpl;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
 
-import static com.OfficeManager.app.security.SecurityConstants.*;
+import static com.OfficeManager.app.security.SecurityConstants.AUTH;
 
 @EnableWebSecurity
 @CrossOrigin(origins = "*")

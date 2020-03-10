@@ -1,6 +1,5 @@
 package com.OfficeManager.app.controllers;
 
-import com.OfficeManager.app.dtos.SingleOfficeDto;
 import com.OfficeManager.app.entities.Office;
 import com.OfficeManager.app.entities.OfficeAssignment;
 import com.OfficeManager.app.entities.Person;
@@ -13,9 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")

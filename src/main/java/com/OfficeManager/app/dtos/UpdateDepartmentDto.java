@@ -1,7 +1,5 @@
 package com.OfficeManager.app.dtos;
 
-import com.OfficeManager.app.entities.Department;
-
 public class UpdateDepartmentDto {
     private String name;
 
