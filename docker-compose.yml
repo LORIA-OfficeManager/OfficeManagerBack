@@ -50,7 +50,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - '${PWD}:/usr/local/lib/'
+      - '${PWD}/log:/log'
     ports:
       - '51000:51000'
     networks:
