@@ -11,6 +11,7 @@ RUN mvn -f /home/app/pom.xml clean package
 # Package stage
 #
 FROM openjdk:11-jre-slim
-COPY --from=build /home/app/target/*.jar /usr/local/lib/app.jar
+COPY --from=build /home/app/target/*.jar app.jar
+
 EXPOSE 51000
-ENTRYPOINT ["java","-Dserver.port=51000", "-jar","/usr/local/lib/app.jar"]
+ENTRYPOINT ["java","-Dserver.port=51000", "-jar","./app.jar"]
