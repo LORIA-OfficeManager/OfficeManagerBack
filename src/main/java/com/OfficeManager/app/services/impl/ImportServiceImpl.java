@@ -177,6 +177,9 @@ public class ImportServiceImpl implements IImportService {
             String date = LocalDateTime.now().toString();
             date = date.substring(0,date.length()-4).replace(':','-');
             fileName = "log/"+date+"log.txt";
+            if(!((new File("log").exists()) && new File("logs").isDirectory())){
+                new File("log").mkdir();
+            }
             log = new FileWriter(fileName);
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,8 +1,8 @@
 package com.OfficeManager.app.dtos;
 
-import java.util.List;
-
 import com.OfficeManager.app.entities.Department;
+
+import java.util.List;
 
 public class DepartmentDto {
     private Integer id;

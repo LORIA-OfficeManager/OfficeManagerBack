@@ -1,0 +1,8 @@
+Import affection commence (2020-03-10) :
+10 : Omar Bellahcene a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
+11 : Alexis Abli-bouyo a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
+12 : Thiebaud Mrbk a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
+13 : Julien Michelitti a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
+14 : Noah Willaime a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
+15 : Guillaume Saunier a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
+16 : Benoit Holzer a été affecté à la team par défaut car sa team ne correspond à aucune dans la liste des status de la base de données.
